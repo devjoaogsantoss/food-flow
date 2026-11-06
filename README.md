@@ -8,6 +8,7 @@ O repositório atualmente contém a documentação do produto e da proposta téc
 
 - [Visão geral](docs/visao-geral.md)
 - [Regras de negócio](docs/regras-de-negocio.md)
+- [Jornada do cliente — da reserva ao pagamento](docs/jornada-do-cliente.md)
 - [Arquitetura](docs/arquitetura.md)
 - [Banco de dados](docs/banco-de-dados.md)
 - [API](docs/api.md)
