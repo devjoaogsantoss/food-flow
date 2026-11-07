@@ -1,0 +1,1120 @@
+:root {
+  --navy: #151946;
+  --beige: #ebe1d5;
+  --wine: #7c170d;
+  --white: #ffffff;
+  --muted: rgba(21, 25, 70, 0.7);
+  --line: rgba(21, 25, 70, 0.15);
+  --font: 'Roboto', Arial, sans-serif;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 48px;
+  --section-space: 96px;
+  --radius: 4px;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 24px;
+}
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--navy);
+  background: var(--white);
+  font-size: 15px;
+  line-height: 1.65;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a {
+  touch-action: manipulation;
+  transition:
+    background 0.18s,
+    color 0.18s;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  cursor: pointer;
+}
+a:hover {
+  color: var(--wine);
+}
+:focus-visible {
+  outline: 3px solid var(--wine);
+  outline-offset: 5px;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.16;
+  font-weight: 500;
+}
+h2 {
+  font-size: clamp(30px, 3.2vw, 42px);
+  letter-spacing: -1.2px;
+}
+h3 {
+  font-size: 23px;
+  letter-spacing: -0.4px;
+}
+svg {
+  flex-shrink: 0;
+}
+.container {
+  width: min(1184px, calc(100% - 96px));
+  margin-inline: auto;
+}
+.section {
+  padding: var(--section-space) 0;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+}
+.support {
+  color: var(--muted);
+  margin-top: 18px;
+  max-width: 490px;
+}
+.section-heading {
+  max-width: 600px;
+}
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  background: var(--white);
+  padding: 12px 20px;
+  transform: translateY(-180%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+/* Institutional header and navigation */
+.institutional {
+  background: var(--navy);
+  color: var(--beige);
+  font-size: 11px;
+  letter-spacing: 0.35px;
+}
+.institutional-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 34px;
+}
+.slogan {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.header-inner {
+  height: 108px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.brand-text {
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+.brand-image {
+  display: block;
+  width: 88px;
+  height: auto;
+  object-fit: contain;
+}
+.footer-main .brand-image {
+  width: 120px;
+}
+.desktop-nav {
+  display: flex;
+  gap: 36px;
+  margin-left: auto;
+  margin-right: 80px;
+}
+.desktop-nav a {
+  padding: 10px 0;
+  font-size: 13px;
+}
+.team-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: 0;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-nav {
+  display: none;
+}
+
+/* Hero and decorative table setting, not a brand asset */
+.hero {
+  border-top: 1px solid var(--line);
+  padding: 58px 0 72px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+}
+.hero-copy {
+  padding-block: 20px;
+}
+.hero .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tiny-line {
+  height: 1px;
+  width: 26px;
+  background: var(--wine);
+}
+h1 {
+  font-size: clamp(40px, 4.35vw, 62px);
+  line-height: 1.12;
+  letter-spacing: -2.6px;
+  font-weight: 400;
+}
+h1 > span {
+  color: var(--wine);
+}
+.hero-description {
+  max-width: 410px;
+  color: var(--muted);
+  font-size: 16px;
+  margin-top: 25px;
+  line-height: 1.8;
+}
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+.button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 12px 20px;
+  color: var(--white);
+  background: var(--wine);
+  border: 1px solid var(--wine);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+}
+.button:hover {
+  background: var(--navy);
+  color: var(--white);
+  border-color: var(--navy);
+}
+.button-secondary {
+  background: transparent;
+  color: var(--navy);
+  border-color: var(--line);
+}
+.button-secondary:hover {
+  background: var(--beige);
+  color: var(--navy);
+  border-color: var(--beige);
+}
+.hero-signature {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: 42px;
+}
+.hero-signature > span {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+.hero-signature .restaurant-name {
+  font-size: 18px;
+  letter-spacing: -0.4px;
+  font-weight: 500;
+}
+.hero-art {
+  background: var(--beige);
+  aspect-ratio: 1 / 1.04;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px;
+}
+.art-top,
+.art-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font-size: 8px;
+  letter-spacing: 1.3px;
+  z-index: 1;
+}
+.art-bottom {
+  align-items: end;
+}
+.art-bottom span:last-child {
+  max-width: 145px;
+  text-align: right;
+  font-size: 10px;
+  letter-spacing: 0.3px;
+}
+.table-setting {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.napkin {
+  position: absolute;
+  width: 45%;
+  height: 67%;
+  background: rgba(255, 255, 255, 0.28);
+  transform: rotate(-24deg);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.plate {
+  width: 68%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--beige);
+  border: 1px solid rgba(124, 23, 13, 0.25);
+  padding: 21px;
+  position: relative;
+  box-shadow: 4px 8px 20px rgba(21, 25, 70, 0.04);
+}
+.plate:before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(124, 23, 13, 0.14);
+  border-radius: 50%;
+}
+.plate-center {
+  height: 100%;
+  border: 1px solid rgba(124, 23, 13, 0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+}
+.plate-center > span:first-child {
+  font-size: 10px;
+  color: var(--muted);
+}
+.plate-center strong {
+  font-size: clamp(17px, 2vw, 27px);
+  font-weight: 400;
+  letter-spacing: -0.6px;
+}
+.plate-rule {
+  height: 1px;
+  width: 30px;
+  background: var(--wine);
+  margin-top: 8px;
+}
+.fork {
+  position: absolute;
+  left: 9%;
+  top: 31%;
+  width: 16px;
+  height: 26px;
+  border-bottom: 1px solid var(--wine);
+  border-radius: 0 0 9px 9px;
+  display: flex;
+  justify-content: space-between;
+}
+.fork i {
+  height: 26px;
+  border-left: 1px solid var(--wine);
+}
+.fork:after {
+  content: '';
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  height: 120px;
+  border-left: 1px solid var(--wine);
+}
+.knife {
+  position: absolute;
+  right: 9%;
+  top: 31%;
+  height: 39%;
+  border-right: 2px solid var(--wine);
+}
+.knife:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 11px;
+  height: 55%;
+  border: 1px solid var(--wine);
+  border-radius: 90% 0 0 8px;
+}
+
+/* Experience and restaurant */
+.experience-section {
+  border-top: 1px solid var(--line);
+}
+.moments {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: var(--space-lg);
+}
+.moment {
+  border-top: 1px solid var(--line);
+  padding-top: var(--space-md);
+}
+.moment-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
+}
+.moment-top > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.moment h3 {
+  font-size: 21px;
+}
+.moment > p {
+  color: var(--muted);
+  max-width: 290px;
+  margin-top: 14px;
+  min-height: 52px;
+}
+.moment-detail {
+  display: block;
+  font-size: 12px;
+  margin-top: 23px;
+  color: var(--wine);
+}
+.scope-note {
+  margin-top: 32px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.restaurant-section {
+  background: var(--navy);
+  color: var(--white);
+  padding: 76px 0;
+}
+.restaurant-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 100px;
+  align-items: center;
+}
+.restaurant-intro .eyebrow {
+  color: var(--beige);
+}
+.restaurant-intro .restaurant-name {
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: -1.5px;
+}
+.restaurant-rule {
+  display: block;
+  width: 38px;
+  height: 1px;
+  background: var(--beige);
+  margin: 26px 0;
+}
+.restaurant-intro > p:not(.eyebrow) {
+  color: var(--beige);
+  max-width: 350px;
+}
+.restaurant-caption {
+  display: block;
+  color: var(--beige);
+  font-size: 10px;
+  margin-top: 30px;
+}
+.dining-options article {
+  padding: 30px 0;
+  border-top: 1px solid rgba(235, 225, 213, 0.25);
+}
+.dining-options article:last-child {
+  padding-bottom: 0;
+}
+.option-index {
+  font-size: 9px;
+  letter-spacing: 1.6px;
+  color: var(--beige);
+}
+.dining-options h3 {
+  margin-top: 14px;
+  font-size: 25px;
+}
+.dining-options p {
+  color: var(--beige);
+  font-size: 13px;
+  margin-top: 12px;
+}
+.dining-options a {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12px;
+  margin-top: 18px;
+  min-height: 44px;
+}
+.dining-options a:hover {
+  color: var(--beige);
+}
+.dining-options a:focus-visible,
+footer a:focus-visible {
+  outline-color: var(--beige);
+}
+.tasting-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+.price {
+  white-space: nowrap;
+  font-size: 20px;
+  color: var(--beige);
+}
+.dining-note {
+  display: block;
+  margin-top: 15px;
+  font-size: 11px;
+  color: var(--beige);
+}
+
+/* Accessible category tabs and empty menu */
+.menu-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+.badge {
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  background: var(--beige);
+  white-space: nowrap;
+}
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  gap: 40px;
+  margin-top: 38px;
+  overflow-x: auto;
+  padding: 5px 4px 0;
+}
+.tabs button {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  min-height: 53px;
+  padding: 8px 8px 15px;
+  font-size: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.tabs button[aria-selected='true'] {
+  color: var(--wine);
+  border-bottom-color: var(--wine);
+}
+.tabs button:focus-visible {
+  outline-offset: -4px;
+}
+.empty-menu {
+  text-align: center;
+  padding: 54px 20px 0;
+}
+.empty-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  margin: 0 auto 22px;
+}
+.empty-menu h3 {
+  font-size: 21px;
+}
+.empty-menu p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 14px 0 20px;
+}
+.small-note {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Demonstration-only reservations */
+.reservation-section {
+  background: var(--beige);
+}
+.reservation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+}
+.reservation-grid .section-heading {
+  max-width: 380px;
+}
+.reservation-grid h2 {
+  font-size: 44px;
+}
+.service-note {
+  display: flex;
+  gap: var(--space-sm);
+  margin: 36px 0 24px;
+}
+.service-note strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+.service-note p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.reservation-grid .small-note {
+  max-width: 330px;
+}
+.reservation-form {
+  background: var(--white);
+  padding: 32px;
+  border-radius: var(--radius);
+}
+.form-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.form-top h3 {
+  font-size: 19px;
+}
+.form-intro {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 8px 0 25px;
+}
+.reservation-form > label,
+legend {
+  display: block;
+  font-size: 10px;
+  color: var(--wine);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.reservation-form > label > span,
+legend > span {
+  font-size: 12px;
+  color: var(--navy);
+  margin-left: 10px;
+}
+.reservation-form input[type='date'],
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  min-height: 48px;
+  background: var(--white);
+  color: var(--navy);
+  padding: 10px 13px;
+  min-width: 0;
+}
+.field-message {
+  font-size: 10px;
+  color: var(--muted);
+  margin: 8px 0 20px;
+}
+.error {
+  color: var(--wine);
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 24px;
+  min-width: 0;
+}
+.time-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.time-option {
+  position: relative;
+  cursor: pointer;
+}
+.time-option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.time-option span {
+  display: block;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px;
+  font-size: 12px;
+  min-height: 44px;
+}
+.time-option input:checked + span {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+.time-option input:focus-visible + span {
+  outline: 3px solid var(--wine);
+  outline-offset: 3px;
+}
+fieldset:disabled .time-option {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.demo-notice {
+  display: flex;
+  gap: 10px;
+  padding: 15px 0;
+  margin-top: 12px;
+  align-items: flex-start;
+}
+.demo-notice p {
+  font-size: 11px;
+  color: var(--muted);
+}
+.unavailable,
+.unavailable:hover {
+  width: 100%;
+  background: var(--beige);
+  border-color: var(--beige);
+  color: var(--navy);
+  cursor: not-allowed;
+}
+
+/* Team preview and footer */
+.team-section {
+  padding: 36px 0;
+}
+.team-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.team-content h2 {
+  font-size: 17px;
+  letter-spacing: -0.2px;
+}
+.team-content p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 7px;
+}
+.team-content > .badge {
+  margin-left: auto;
+}
+footer {
+  background: var(--navy);
+  color: var(--beige);
+  padding: 48px 0 22px;
+}
+.footer-main {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr auto;
+  gap: 40px;
+  padding-bottom: 38px;
+}
+.footer-main p {
+  font-size: 12px;
+  margin-top: 12px;
+}
+.footer-main .footer-label {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  margin: 6px 0 15px;
+}
+.footer-main .restaurant-name {
+  font-size: 21px;
+  font-weight: 400;
+}
+.footer-main nav {
+  display: flex;
+  gap: 28px;
+  align-items: start;
+  padding-top: 8px;
+  font-size: 12px;
+}
+.footer-main nav a {
+  min-height: 44px;
+}
+footer a:hover {
+  color: var(--white);
+}
+.footer-bottom {
+  border-top: 1px solid rgba(235, 225, 213, 0.2);
+  padding-top: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 10px;
+}
+
+@media (min-width: 1450px) {
+  .hero {
+    padding-block: 76px;
+  }
+  .hero-art {
+    max-height: 550px;
+  }
+}
+@media (max-width: 1050px) {
+  .container {
+    width: calc(100% - 56px);
+  }
+  .desktop-nav {
+    margin-right: 20px;
+    gap: 24px;
+  }
+  .hero-grid {
+    gap: 28px;
+  }
+  h1 {
+    font-size: 44px;
+  }
+  .hero-art {
+    aspect-ratio: 1 / 1.2;
+  }
+  .hero-actions {
+    gap: 10px;
+  }
+  .hero-actions .button {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .restaurant-grid,
+  .reservation-grid {
+    gap: 48px;
+  }
+  .plate {
+    padding: 15px;
+  }
+  .plate-center > span:first-child {
+    font-size: 8px;
+  }
+  .tasting-heading {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .moments {
+    gap: 26px;
+  }
+  .footer-main nav {
+    gap: 16px;
+  }
+  .reservation-grid h2 {
+    font-size: 37px;
+  }
+}
+@media (max-width: 760px) {
+  .header-inner .brand-image {
+    width: 76px;
+  }
+  :root {
+    --section-space: 60px;
+  }
+  .container {
+    width: calc(100% - 40px);
+  }
+  .institutional-inner > span:first-child {
+    display: none;
+  }
+  .institutional-inner {
+    justify-content: flex-end;
+  }
+  .header-inner {
+    height: 92px;
+  }
+  .brand-text {
+    font-size: 23px;
+  }
+  .desktop-nav,
+  .header-inner > .team-link {
+    display: none;
+  }
+  .menu-toggle {
+    display: flex;
+  }
+  .mobile-nav:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 20px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .mobile-nav a {
+    padding: 11px 0;
+  }
+  .hero {
+    padding: 30px 0 48px;
+  }
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .hero-copy {
+    padding-block: 8px;
+  }
+  h1 {
+    font-size: clamp(39px, 7.6vw, 55px);
+    letter-spacing: -1.8px;
+  }
+  .hero-description {
+    font-size: 15px;
+  }
+  .hero-actions {
+    margin-top: 26px;
+  }
+  .hero-signature {
+    margin-top: 28px;
+  }
+  .hero-art {
+    aspect-ratio: 1.25;
+    max-height: 440px;
+  }
+  .plate {
+    width: 57%;
+    max-width: 310px;
+  }
+  .plate-center strong {
+    font-size: 25px;
+  }
+  .plate-center > span:first-child {
+    font-size: 10px;
+  }
+  .fork {
+    left: 14%;
+  }
+  .fork:after {
+    height: 85px;
+  }
+  .knife {
+    right: 14%;
+  }
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.6px;
+    margin-bottom: 17px;
+  }
+  .moments {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-top: 32px;
+  }
+  .moment {
+    position: relative;
+    padding: 24px 0 0 56px;
+  }
+  .moment-top {
+    position: absolute;
+    left: 0;
+    top: 26px;
+    display: block;
+    margin: 0;
+  }
+  .moment-top > span {
+    display: block;
+    margin-top: 12px;
+  }
+  .moment > p {
+    min-height: 0;
+    max-width: 100%;
+    margin-top: 10px;
+  }
+  .moment-detail {
+    margin-top: 12px;
+  }
+  .scope-note {
+    font-size: 10px;
+  }
+  .restaurant-section {
+    padding: 54px 0;
+  }
+  .restaurant-grid,
+  .reservation-grid {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+  .restaurant-intro .restaurant-name {
+    font-size: 42px;
+  }
+  .restaurant-caption {
+    margin-top: 20px;
+  }
+  .dining-options article {
+    padding-block: 25px;
+  }
+  .tasting-heading {
+    flex-wrap: nowrap;
+  }
+  .menu-heading {
+    display: block;
+  }
+  .menu-heading > .badge {
+    display: inline-block;
+    margin-top: 22px;
+  }
+  .tabs {
+    gap: 18px;
+    margin-top: 24px;
+  }
+  .tabs button {
+    font-size: 13px;
+  }
+  .empty-menu {
+    padding-top: 36px;
+  }
+  .empty-menu h3 {
+    font-size: 20px;
+  }
+  .empty-menu p br {
+    display: none;
+  }
+  .reservation-grid h2 {
+    font-size: 36px;
+  }
+  .reservation-form {
+    padding: 24px;
+  }
+  .service-note {
+    margin-top: 26px;
+  }
+  .form-top h3 {
+    font-size: 18px;
+  }
+  .team-content {
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .team-content > .badge {
+    display: none;
+  }
+  .team-content h2 {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding-bottom: 20px;
+  }
+  .footer-main nav {
+    grid-column: 1 / -1;
+    gap: 30px;
+    padding: 0;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+@media (max-width: 380px) {
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-art {
+    padding: 20px;
+  }
+  .art-top {
+    font-size: 7px;
+  }
+  .plate-center strong {
+    font-size: 19px;
+  }
+  .plate-center > span:first-child {
+    font-size: 8px;
+  }
+  .tasting-heading {
+    flex-wrap: wrap;
+  }
+  .footer-main {
+    grid-template-columns: 1fr;
+  }
+  .reservation-form {
+    padding: 20px;
+  }
+  .form-top {
+    flex-wrap: wrap;
+  }
+  .tabs {
+    gap: 9px;
+  }
+  .tabs button {
+    padding-inline: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *:before,
+  *:after {
+    transition: none !important;
+  }
+}
