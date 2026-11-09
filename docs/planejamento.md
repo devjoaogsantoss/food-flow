@@ -1,5 +1,7 @@
 # Planejamento
 
+> A divisão de responsabilidades foi atualizada em [Planejamento e divisão de tarefas](planejamento-e-divisao-de-tarefas.md). Preserve este documento como histórico do planejamento anterior.
+
 Este documento propõe marcos, responsabilidades e backlog para 22 dias. [Voltar ao README](../README.md).
 
 | Dias | Marco | Evidência |
