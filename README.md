@@ -13,6 +13,7 @@ O repositório atualmente contém a documentação do produto e da proposta téc
 - [Banco de dados](docs/banco-de-dados.md)
 - [API](docs/api.md)
 - [Planejamento](docs/planejamento.md)
+- [Planejamento e divisão de tarefas](docs/planejamento-e-divisao-de-tarefas.md)
 - [Contribuição](docs/contribuicao.md)
 - [Testes e demonstração](docs/testes-e-demonstracao.md)
 - [Registro de prompts](docs/prompts/README.md)
