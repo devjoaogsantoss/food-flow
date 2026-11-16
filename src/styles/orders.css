@@ -1,0 +1,172 @@
+
+.orders-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  color: #222;
+  font-family: Arial, sans-serif;
+}
+
+.orders-title {
+  margin-bottom: 25px;
+}
+
+.orders-title h1 {
+  margin-bottom: 8px;
+}
+
+.profile-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.profile-selector select,
+.tasting-section select,
+.tasting-section input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin: 20px 0 30px;
+}
+
+.table-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.table-card:hover,
+.table-card.selected {
+  border-color: #287a50;
+  background: #f0faf4;
+}
+
+.command-section,
+.order-composer,
+.rounds-section,
+.tasting-section {
+  margin-top: 25px;
+}
+
+.menu-category {
+  margin: 20px 0;
+}
+
+.menu-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.product-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.product-card p {
+  margin: 6px 0 0;
+}
+
+.product-card input {
+  width: 55px;
+  padding: 8px;
+}
+
+.primary-button,
+.deliver-button {
+  padding: 12px 18px;
+  color: white;
+  background: #287a50;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.round-card {
+  margin: 15px 0;
+  padding: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.round-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.status-preparing,
+.status-delivered {
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.status-preparing {
+  color: #8a5700;
+  background: #fff2d6;
+}
+
+.status-delivered {
+  color: #17663b;
+  background: #dcf5e6;
+}
+
+.deliver-button {
+  margin-top: 10px;
+  background: #245c9c;
+}
+
+.tasting-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .orders-page {
+    padding: 20px 12px;
+  }
+
+  .profile-selector {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .round-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
