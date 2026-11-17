@@ -170,3 +170,9 @@
     flex-direction: column;
   }
 }
+
+.orders-back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  text-decoration: underline;
+}

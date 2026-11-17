@@ -110,6 +110,7 @@ export default function OrdersPage() {
   return (
     <main className="orders-page">
       <header className="orders-title">
+        <a href="/" className="orders-back-link">Voltar ao início</a>
         <h1>Food Flow - Pedidos</h1>
         <p>Gerenciamento de comandas e pedidos.</p>
       </header>
