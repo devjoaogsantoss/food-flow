@@ -18,6 +18,14 @@ O repositório atualmente contém a documentação do produto e da proposta téc
 - [Testes e demonstração](docs/testes-e-demonstracao.md)
 - [Registro de prompts](docs/prompts/README.md)
 
+## Execução e integração local
+
+Use `npm.cmd ci`, `npm.cmd run dev`, `npm.cmd test` e `npm.cmd run build` no PowerShell. Cliente: `/` e `/minha-reserva`. Equipe: `/equipe`, com matrícula demonstrativa direcionando a `/pedidos` (garçom), `/recepcao` ou `/cozinha`.
+
+A recepção e os pedidos estão conectados como protótipo no navegador, com dados fictícios e sem autenticação. Consulte o [registro da integração de Matheus](docs/integracao-matheus.md) para contratos, preservação dos dados, roteiro de revisão e conexões ainda pendentes.
+
+O [cardápio e roteiro dos dois caminhos](docs/cardapio-e-pedidos.md) descreve a planilha integrada, preços, estacionamento e matrículas de teste. Para atualizar o catálogo a partir de `src/data/cardapio.csv`, execute `node scripts/import-menu.mjs`.
+
 ## Equipe
 
 João, Manasses, Vinicius, Matheus, Dudu, Israel e Henrique.

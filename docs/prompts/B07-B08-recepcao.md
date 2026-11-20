@@ -1,0 +1,10 @@
+# B07 e B08 — Recepção, espera, acomodação e comanda
+Autor: Matheus | Data: 2026-11-12
+Objetivo: lista de reservas da recepção, busca, chegada exclusiva da recepção, espera com aviso ao responsável, acomodação e abertura única da comanda.
+Prompt: missão de Matheus (planejamento-e-divisao-de-tarefas.md) com os oito passos da recepção; instruções do Context.md e da contribuição de Henrique; fluxo "a IA gera o código, explica e indica os arquivos; o autor cria os arquivos na IDE".
+Decisão humana original: pendente de revisão por Matheus. Em 20/11/2026, o usuário autorizou Codex a integrar e ajustar a entrega antes do review conjunto. Identificação solicitada: "ajuste feito por Matheus". Integração executada por Codex nesta sessão; revisão humana final pendente.
+Arquivos: src/lib/reception.js, src/services/receptionApi.js, src/components/reception/ReservationCard.jsx, src/components/reception/TablesPanel.jsx, src/pages/ReceptionPage.jsx, src/pages/GuestStatusPage.jsx, src/styles/reception.css, src/main.jsx, tests/reception.test.js e este registro.
+Verificação: `node --test` executado em ambiente Linux com Node 22 — 20 testes aprovados (16 novos e 4 existentes). JSX compilado com Babel e componentes renderizados em teste estático de fumaça. `npm run build` NÃO foi executado e não houve validação visual em navegador; Matheus deve rodar `npm run build`, `npm test` e conferir as telas.
+Limites originais: reservas, mesas e comandas ficam em localStorage (dados fictícios no lugar da entrega de Manasses e da API de Vinicius); o seletor de perfil é só demonstração, não é autenticação; regra "mesa deve ter a mesma capacidade da categoria reservada" é decisão a confirmar com Manasses.
+
+Integração em 20/11/2026: preservação das rotas de Luiz e da correção do PR #3; armazenamento versionado e gravação conjunta; inventário de mesas compartilhado; conexão com pedidos e atualização entre abas; lista de espera, bar e saída condicionada ao fechamento. Detalhes, contratos, validação e pendências em [Integração da entrega de Matheus](../integracao-matheus.md). A verificação descrita acima é o relato da entrega original, não a validação desta sessão.

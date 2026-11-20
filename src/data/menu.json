@@ -1,0 +1,298 @@
+{
+  "source": "cardapio.csv",
+  "aLaCarte": [
+    {
+      "id": "BEB001",
+      "category": "Bebida",
+      "subcategory": "Refrigerante",
+      "name": "Refrigerante de cola",
+      "description": "Garrafa de 290 ml",
+      "priceCents": 1690,
+      "available": true
+    },
+    {
+      "id": "BEB002",
+      "category": "Bebida",
+      "subcategory": "Refrigerante",
+      "name": "Refrigerante de guaraná",
+      "description": "Garrafa de 290 ml",
+      "priceCents": 1590,
+      "available": true
+    },
+    {
+      "id": "BEB003",
+      "category": "Bebida",
+      "subcategory": "Vinho",
+      "name": "Taça de vinho tinto",
+      "description": "Taça de 350ml",
+      "priceCents": 2690,
+      "available": true
+    },
+    {
+      "id": "BEB004",
+      "category": "Bebida",
+      "subcategory": "Vinho",
+      "name": "Taça de vinho branco",
+      "description": "Taça de 350ml",
+      "priceCents": 2990,
+      "available": true
+    },
+    {
+      "id": "BEB005",
+      "category": "Bebida",
+      "subcategory": "Suco",
+      "name": "Suco de laranja",
+      "description": "Taça de 350ml",
+      "priceCents": 1690,
+      "available": true
+    },
+    {
+      "id": "BEB006",
+      "category": "Bebida",
+      "subcategory": "Água",
+      "name": "Água com gás",
+      "description": "Garrafa 300ml",
+      "priceCents": 990,
+      "available": true
+    },
+    {
+      "id": "ENT001",
+      "category": "Entrada",
+      "subcategory": "Ostra",
+      "name": "Ostra fresca de Itapissuma",
+      "description": "Porção com 3 45g",
+      "priceCents": 2990,
+      "available": true
+    },
+    {
+      "id": "ENT002",
+      "category": "Entrada",
+      "subcategory": "Peixe",
+      "name": "Pintado curado com picles de manga",
+      "description": "Porção com 1 72g",
+      "priceCents": 3390,
+      "available": true
+    },
+    {
+      "id": "ENT003",
+      "category": "Entrada",
+      "subcategory": "Vegano",
+      "name": "Dadinho de Tapioca Vegano",
+      "description": "Porção com 6 84g",
+      "priceCents": 3190,
+      "available": true
+    },
+    {
+      "id": "PRI001",
+      "category": "Principal",
+      "subcategory": "Frango",
+      "name": "Frango Piccata com Rabanetes e Legumes salteados na manteiga",
+      "description": "Porção unica com 409g",
+      "priceCents": 8990,
+      "available": true
+    },
+    {
+      "id": "PRI002",
+      "category": "Principal",
+      "subcategory": "Carne Bovina",
+      "name": "Costela Bovina braseada em refrigerante de Cola com Risoto, queijo gouda curado acompanha",
+      "description": "Porção unica com 488g",
+      "priceCents": 9390,
+      "available": true
+    },
+    {
+      "id": "PRI003",
+      "category": "Principal",
+      "subcategory": "Peixe",
+      "name": "Salmão com molho de alcaparras e Legumes ao molho de Vermut",
+      "description": "Porção unica com 451g",
+      "priceCents": 9990,
+      "available": true
+    },
+    {
+      "id": "SOB001",
+      "category": "Sobremesa",
+      "subcategory": "Cartola",
+      "name": "Cartola com sorvete de tapioca e ganache de doce de leite",
+      "description": "Porção unica com 150g",
+      "priceCents": 3990,
+      "available": true
+    },
+    {
+      "id": "SOB002",
+      "category": "Sobremesa",
+      "subcategory": "Cannoli",
+      "name": "Cannoli Salgado de Parmesão e mix de frutas cítricas",
+      "description": "Porção unica com 119g",
+      "priceCents": 4190,
+      "available": true
+    },
+    {
+      "id": "SOB003",
+      "category": "Sobremesa",
+      "subcategory": "Donut",
+      "name": "Donut com Geleia de morango",
+      "description": "Porção unica com 181g",
+      "priceCents": 3690,
+      "available": true
+    }
+  ],
+  "tastingMenus": [
+    {
+      "id": "DEG001",
+      "name": "Menu Degustação Mar",
+      "priceCents": 22696,
+      "items": [
+        {
+          "id": "BEB003",
+          "category": "Bebida",
+          "subcategory": "Vinho",
+          "name": "Taça de vinho tinto",
+          "description": "Taça de 350ml",
+          "priceCents": 2690,
+          "available": true
+        },
+        {
+          "id": "BEB004",
+          "category": "Bebida",
+          "subcategory": "Vinho",
+          "name": "Taça de vinho branco",
+          "description": "Taça de 350ml",
+          "priceCents": 2990,
+          "available": true
+        },
+        {
+          "id": "ENT001",
+          "category": "Entrada",
+          "subcategory": "Ostra",
+          "name": "Ostra fresca de Itapissuma",
+          "description": "Porção com 5 45g",
+          "priceCents": 3990,
+          "available": true
+        },
+        {
+          "id": "PRI003",
+          "category": "Principal",
+          "subcategory": "Peixe",
+          "name": "Salmão com molho de alcaparras e Legumes ao molho de Vermut",
+          "description": "Porção unica com 451g",
+          "priceCents": 9990,
+          "available": true
+        },
+        {
+          "id": "SOB002",
+          "category": "Sobremesa",
+          "subcategory": "Cannoli",
+          "name": "Cannoli Salgado de Parmesão e mix de frutas cítricas",
+          "description": "Porção unica com 202g",
+          "priceCents": 5990,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "DEG002",
+      "name": "Menu Degustação Terra",
+      "priceCents": 21796,
+      "items": [
+        {
+          "id": "BEB003",
+          "category": "Bebida",
+          "subcategory": "Vinho",
+          "name": "Taça de vinho tinto",
+          "description": "Taça de 350ml",
+          "priceCents": 2690,
+          "available": true
+        },
+        {
+          "id": "BEB004",
+          "category": "Bebida",
+          "subcategory": "Vinho",
+          "name": "Taça de vinho branco",
+          "description": "Taça de 350ml",
+          "priceCents": 2990,
+          "available": true
+        },
+        {
+          "id": "ENT001",
+          "category": "Entrada",
+          "subcategory": "Ostra",
+          "name": "Bruschetta com raggu de paleta",
+          "description": "Porção com 3 202g",
+          "priceCents": 4990,
+          "available": true
+        },
+        {
+          "id": "PRI002",
+          "category": "Principal",
+          "subcategory": "Carne Bovina",
+          "name": "Costela Bovina braseada em refrigerante de Cola com Risoto, queijo gouda curado acompanha",
+          "description": "Porção unica com 488g",
+          "priceCents": 9390,
+          "available": true
+        },
+        {
+          "id": "SOB001",
+          "category": "Sobremesa",
+          "subcategory": "Cartola",
+          "name": "Cartola com sorvete de tapioca e ganache de doce de leite",
+          "description": "Porção unica com 275g",
+          "priceCents": 5990,
+          "available": true
+        }
+      ]
+    },
+    {
+      "id": "DEG003",
+      "name": "Menu Degustação Vegano",
+      "priceCents": 21535,
+      "items": [
+        {
+          "id": "BEB011",
+          "category": "Bebida",
+          "subcategory": "Drink",
+          "name": "Piña Colada Vegana",
+          "description": "Taça de 390 ml",
+          "priceCents": 2690,
+          "available": true
+        },
+        {
+          "id": "BEB006",
+          "category": "Bebida",
+          "subcategory": "Água",
+          "name": "Água com gás",
+          "description": "Garrafa 300ml",
+          "priceCents": 990,
+          "available": true
+        },
+        {
+          "id": "ENT003",
+          "category": "Entrada",
+          "subcategory": "Vegano",
+          "name": "Dadinho de Tapioca Vegano",
+          "description": "Porção com 8 104g",
+          "priceCents": 3690,
+          "available": true
+        },
+        {
+          "id": "PRI004",
+          "category": "Principal",
+          "subcategory": "Risoto",
+          "name": "Risoto Mix de Cogumelos com Tahime de Limão Taiti",
+          "description": "Porção unica com 460g",
+          "priceCents": 9190,
+          "available": true
+        },
+        {
+          "id": "SOB004",
+          "category": "Sobremesa",
+          "subcategory": "Donut",
+          "name": "Donut de Castanhas com Geleia de morango",
+          "description": "Porção unica com 228g",
+          "priceCents": 5990,
+          "available": true
+        }
+      ]
+    }
+  ]
+}
