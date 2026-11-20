@@ -1,0 +1,248 @@
+/* Estilos da recepção. Prefixo rc- para não colidir com os de outras telas. */
+.rc-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--beige);
+}
+.rc-topbar .brand-image {
+  display: block;
+  width: auto;
+  height: 40px;
+}
+.rc-page {
+  width: min(1184px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 32px 0 64px;
+}
+.rc-lead {
+  margin: 8px 0 24px;
+  color: var(--muted);
+}
+.rc-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.rc-filters label,
+.rc-actions label,
+.rc-guest-form label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.rc-filters input,
+.rc-filters select,
+.rc-actions select,
+.rc-guest-form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  color: var(--navy);
+}
+.rc-search {
+  grid-column: span 2;
+}
+.rc-feedback {
+  min-height: 28px;
+  margin: 16px 0;
+  font-weight: 500;
+}
+.rc-ok {
+  color: #1d6b3a;
+}
+.rc-error {
+  color: var(--wine);
+}
+.rc-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.rc-column h2,
+.rc-tables h2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--navy);
+  font-size: 18px;
+}
+.rc-column h2 span {
+  min-width: 28px;
+  padding: 0 8px;
+  border-radius: 14px;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 13px;
+  text-align: center;
+}
+.rc-card {
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+}
+.rc-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rc-card h3 {
+  font-size: 16px;
+}
+.rc-meta,
+.rc-hint,
+.rc-empty {
+  font-size: 13px;
+  color: var(--muted);
+}
+.rc-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.rc-tag {
+  align-self: start;
+  padding: 2px 10px;
+  border-radius: 12px;
+  background: var(--beige);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.rc-tag-em_espera {
+  background: var(--wine);
+  color: var(--white);
+}
+.rc-tag-acomodada {
+  background: var(--navy);
+  color: var(--white);
+}
+.rc-btn {
+  padding: 10px 16px;
+  border: 1px solid var(--navy);
+  border-radius: var(--radius);
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 500;
+}
+.rc-btn:hover:not(:disabled) {
+  background: var(--wine);
+  border-color: var(--wine);
+}
+.rc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.rc-btn-secondary {
+  background: var(--white);
+  color: var(--navy);
+}
+.rc-btn-small {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+.rc-tables {
+  margin-top: 40px;
+}
+.rc-table-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rc-table {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+.rc-table-pronta {
+  border-color: #1d6b3a;
+}
+.rc-table-aguardando_limpeza {
+  border-color: var(--wine);
+}
+.rc-guest {
+  max-width: 640px;
+}
+.rc-guest-form {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.rc-guest-card {
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.rc-guest-em_espera {
+  border-color: var(--wine);
+  background: #fbf3f1;
+}
+.rc-steps {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+.rc-steps li {
+  flex: 1;
+  padding: 6px 0;
+  border-top: 4px solid var(--line);
+  font-size: 13px;
+}
+.rc-steps .rc-step-done {
+  border-top-color: var(--navy);
+  font-weight: 500;
+}
+@media (max-width: 900px) {
+  .rc-columns {
+    grid-template-columns: 1fr;
+  }
+  .rc-search {
+    grid-column: auto;
+  }
+}
+
+.rc-page label,
+.rc-page input,
+.rc-page select,
+.rc-page button,
+.rc-page .rc-meta,
+.rc-page .rc-hint,
+.rc-page .rc-table,
+.rc-page .rc-steps li {
+  font-size: 0.875rem;
+}
+
+.rc-topbar {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rc-table,
+.rc-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rc-page a.rc-btn {
+  display: inline-block;
+  text-decoration: none;
+}

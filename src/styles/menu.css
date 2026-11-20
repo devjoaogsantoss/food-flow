@@ -1,0 +1,444 @@
+.menu-catalog {
+  margin-top: 24px;
+}
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 16px;
+}
+.category-filters button,
+.carousel-controls button {
+  padding: 10px 16px;
+  background: white;
+  color: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  font: inherit;
+  cursor: pointer;
+}
+.category-filters button[aria-pressed='true'] {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: white;
+}
+.category-row {
+  min-width: 0;
+  margin: 32px 0;
+}
+.category-row-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.category-row-heading h3 {
+  font-size: 1.35rem;
+}
+.carousel-controls {
+  display: flex;
+  gap: 8px;
+}
+.carousel-controls button {
+  font-size: 0.875rem;
+}
+.category-carousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding: 4px 2px 18px;
+  scrollbar-color: var(--navy) transparent;
+}
+.category-carousel .catalog-product {
+  flex: 0 0 290px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+}
+.category-carousel .catalog-product-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.category-carousel .catalog-product-body form,
+.category-carousel .catalog-product-body > a {
+  margin-top: auto;
+  padding-top: 12px;
+}
+.category-carousel .catalog-product-body > a {
+  padding-bottom: 12px;
+}
+.catalog-product h4 {
+  font-size: 1.05rem;
+  line-height: 1.45;
+  margin: 10px 0;
+}
+.product-category {
+  font-size: 0.875rem;
+  color: var(--wine);
+}
+.product-serving {
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin: 3px 0;
+}
+.product-photo-button {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  background: var(--navy);
+  cursor: pointer;
+}
+.product-photo-button span {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  background: var(--navy);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+.product-details {
+  width: min(640px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  color: var(--navy);
+  background: white;
+  margin: auto;
+}
+.product-details::backdrop {
+  background: rgba(10, 14, 34, 0.7);
+}
+.product-details-content {
+  padding: 24px;
+}
+.product-details img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+.product-details h2 {
+  font-size: 1.4rem;
+  margin: 12px 0;
+}
+.product-details h3 {
+  margin: 20px 0 10px;
+}
+.details-close {
+  display: block;
+  margin-left: auto;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--navy);
+  font: inherit;
+}
+@media (max-width: 600px) {
+  .category-carousel .catalog-product {
+    flex-basis: min(280px, 82vw);
+  }
+  .product-details-content {
+    padding: 16px;
+  }
+}
+.staff-session {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: var(--navy);
+  color: white;
+  font-size: 0.875rem;
+}
+.staff-session button {
+  border: 1px solid white;
+  padding: 4px 10px;
+  color: white;
+  background: transparent;
+  cursor: pointer;
+}
+.staff-login {
+  max-width: 520px;
+  margin: 60px auto;
+  padding: 24px;
+}
+.staff-login .brand-image {
+  max-width: 200px;
+}
+.staff-login h1 {
+  margin: 20px 0;
+}
+.staff-login form,
+.staff-login label {
+  display: grid;
+  gap: 14px;
+  margin: 20px 0;
+}
+.staff-login input {
+  width: 100%;
+  padding: 12px;
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.menu-paths {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.menu-path {
+  display: grid;
+  gap: 9px;
+  padding: 26px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--navy);
+  background: white;
+  cursor: pointer;
+}
+.menu-path span,
+.menu-code {
+  color: var(--wine);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.menu-path strong {
+  font-size: 1.35rem;
+}
+.menu-path small {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.menu-path.is-active {
+  color: white;
+  background: var(--navy);
+  border-color: var(--navy);
+}
+.menu-path.is-active span {
+  color: #f3c6ae;
+}
+.menu-description {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 12px 0;
+}
+.menu-filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.menu-catalog label {
+  display: grid;
+  gap: 7px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.menu-catalog input,
+.menu-catalog select,
+.order-draft textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: white;
+  color: var(--navy);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+}
+.catalog-products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.catalog-product,
+.tasting-menu-card {
+  overflow: hidden;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+.catalog-product img,
+.tasting-menu-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/2;
+  object-fit: cover;
+  display: block;
+}
+.catalog-product-body,
+.tasting-menu-body {
+  padding: 20px;
+}
+.catalog-product h3 {
+  font-size: 1.05rem;
+  line-height: 1.45;
+  margin: 10px 0;
+}
+.menu-price {
+  display: block;
+  color: var(--wine);
+  font-size: 1.3rem;
+  margin: 12px 0;
+}
+.menu-price small {
+  font-size: 0.875rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+.catalog-product form,
+.tasting-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.menu-action {
+  display: inline-block;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 6px;
+  color: white;
+  background: var(--navy);
+  text-align: center;
+  text-decoration: none;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.menu-action:hover:not(:disabled) {
+  background: var(--wine);
+}
+.menu-action:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.tasting-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+.tasting-menu-card h3 {
+  font-size: 1.35rem;
+  margin-top: 12px;
+}
+.tasting-menu-card ul {
+  list-style: none;
+  padding: 0;
+}
+.tasting-menu-card li {
+  display: grid;
+  gap: 4px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  line-height: 1.5;
+}
+.tasting-menu-card li strong {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--wine);
+}
+.tasting-menu-card li small {
+  color: var(--muted);
+}
+.menu-line-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.menu-photo-note {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.order-draft,
+.order-bill {
+  margin-top: 28px;
+  padding: 24px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.order-draft {
+  display: grid;
+  gap: 14px;
+}
+.order-draft ul {
+  list-style: none;
+  padding: 0;
+}
+.order-draft li {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.order-draft li div {
+  display: grid;
+  gap: 6px;
+}
+.order-draft li button {
+  align-self: start;
+  padding: 6px;
+  background: transparent;
+  border: 0;
+  color: var(--wine);
+  cursor: pointer;
+}
+.order-draft textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+.order-bill dl div {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.order-bill dd {
+  white-space: nowrap;
+  margin: 0;
+}
+.bill-total {
+  border-top: 1px solid var(--line);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+@media (max-width: 1000px) {
+  .catalog-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tasting-menu-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .menu-paths,
+  .menu-filters,
+  .catalog-products {
+    grid-template-columns: 1fr;
+  }
+  .menu-path {
+    padding: 20px;
+  }
+  .order-draft,
+  .order-bill {
+    padding: 16px;
+  }
+}

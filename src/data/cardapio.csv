@@ -1,0 +1,46 @@
+,,,,,,,
+,,,,,,,
+,Cardápio a La Carte,,,,,,
+,Id,Categoria,Subcategoria,Nome,Descrição,Preço (R$),Disponível
+,BEB001,Bebida,Refrigerante,Refrigerante de cola,Garrafa de 290 ml,"R$ 16,90",Sim
+,BEB002,Bebida,Refrigerante,Refrigerante de guaraná,Garrafa de 290 ml,"R$ 15,90",Sim
+,BEB003,Bebida,Vinho,Taça de vinho tinto,Taça de 350ml,"R$ 26,90",Sim
+,BEB004,Bebida,Vinho,Taça de vinho branco,Taça de 350ml,"R$ 29,90",Sim
+,BEB005,Bebida,Suco,Suco de laranja,Taça de 350ml,"R$ 16,90",Sim
+,BEB006,Bebida,Água,Água com gás,Garrafa 300ml,"R$ 9,90",Sim
+,ENT001,Entrada,Ostra,Ostra fresca de Itapissuma,Porção com 3 45g,"R$ 29,90",Sim
+,ENT002,Entrada,Peixe,Pintado curado com picles de manga,Porção com 1 72g,"R$ 33,90",Sim
+,ENT003,Entrada,Vegano,Dadinho de Tapioca Vegano,Porção com 6 84g,"R$ 31,90",Sim
+,PRI001,Principal,Frango,Frango Piccata com Rabanetes e Legumes salteados na manteiga,Porção unica com 409g,"R$ 89,90",Sim
+,PRI002,Principal,Carne Bovina,"Costela Bovina braseada em refrigerante de Cola com Risoto, queijo gouda curado acompanha",Porção unica com 488g,"R$ 93,90",Sim
+,PRI003,Principal,Peixe,Salmão com molho de alcaparras e Legumes ao molho de Vermut,Porção unica com 451g,"R$ 99,90",Sim
+,SOB001,Sobremesa,Cartola,Cartola com sorvete de tapioca e ganache de doce de leite,Porção unica com 150g,"R$ 39,90",Sim
+,SOB002,Sobremesa,Cannoli,Cannoli Salgado de Parmesão e mix de frutas cítricas,Porção unica com 119g,"R$ 41,90",Sim
+,SOB003,Sobremesa,Donut,Donut com Geleia de morango,Porção unica com 181g,"R$ 36,90",Sim
+,,,,,,,
+,,,,,,,
+,"Menu Degustação Mar R$226,96",,,,,,
+,Id,Categoria,Subcategoria,Nome,Descrição,Preço (R$),Disponível
+,BEB003,Bebida,Vinho,Taça de vinho tinto,Taça de 350ml,"R$ 26,90",Sim
+,BEB004,Bebida,Vinho,Taça de vinho branco,Taça de 350ml,"R$ 29,90",Sim
+,ENT001,Entrada,Ostra,Ostra fresca de Itapissuma,Porção com 5 45g,"R$ 39,90",Sim
+,PRI003,Principal,Peixe,Salmão com molho de alcaparras e Legumes ao molho de Vermut,Porção unica com 451g,"R$ 99,90",Sim
+,SOB002,Sobremesa,Cannoli,Cannoli Salgado de Parmesão e mix de frutas cítricas,Porção unica com 202g,"R$ 59,90",Sim
+,,,,,,,
+,,,,,,,
+,"Menu Degustação Terra R$217,96",,,,,,
+,Id,Categoria,Subcategoria,Nome,Descrição,Preço (R$),Disponível
+,BEB003,Bebida,Vinho,Taça de vinho tinto,Taça de 350ml,"R$ 26,90",Sim
+,BEB004,Bebida,Vinho,Taça de vinho branco,Taça de 350ml,"R$ 29,90",Sim
+,ENT001,Entrada,Ostra,Bruschetta com raggu de paleta,Porção com 3 202g,"R$ 49,90",Sim
+,PRI002,Principal,Carne Bovina,"Costela Bovina braseada em refrigerante de Cola com Risoto, queijo gouda curado acompanha",Porção unica com 488g,"R$ 93,90",Sim
+,SOB001,Sobremesa,Cartola,Cartola com sorvete de tapioca e ganache de doce de leite,Porção unica com 275g,"R$ 59,90",Sim
+,,,,,,,
+,,,,,,,
+,"Menu Degustação Vegano R$215,35",,,,,,
+,Id,Categoria,Subcategoria,Nome,Descrição,Preço (R$),Disponível
+,BEB011,Bebida,Drink,Piña Colada Vegana,Taça de 390 ml,"R$ 26,90",Sim
+,BEB006,Bebida,Água,Água com gás,Garrafa 300ml,"R$ 9,90",Sim
+,ENT003,Entrada,Vegano,Dadinho de Tapioca Vegano,Porção com 8 104g,"R$ 36,90",Sim
+,PRI004,Principal,Risoto,Risoto Mix de Cogumelos com Tahime de Limão Taiti,Porção unica com 460g,"R$ 91,90",Sim
+,SOB004,Sobremesa,Donut,Donut de Castanhas com Geleia de morango,Porção unica com 228g,"R$ 59,90",Sim

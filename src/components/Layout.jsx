@@ -46,10 +46,10 @@ function Navigation({ onNavigate }) {
         Reservas
       </a>
       <a
-        href="/pedidos"
+        href="/minha-reserva"
         onClick={onNavigate}
       >
-        Pedidos
+        Minha reserva
       </a>
     </>
   );
@@ -87,7 +87,7 @@ export function Header() {
         </nav>
         <a
           className="team-link"
-          href="/pedidos"
+          href="/equipe"
         >
           <Icon
             name="lock"
@@ -120,7 +120,7 @@ export function Header() {
       >
         <Navigation onNavigate={() => setOpen(false)} />
         <a
-          href="/pedidos"
+          href="/equipe"
           onClick={() => setOpen(false)}
         >
           Área da equipe
