@@ -179,6 +179,37 @@ try {
       `!!document.querySelector('a[href="/equipe"]') && !document.querySelector('a[href="/recepcao"]')`,
     ),
   );
+  // Reserva pública real do protótipo, sem alterar os dados do navegador pessoal.
+  const reservationDate = await evaluate(home, `(() => {
+    const d = new Date(); d.setDate(d.getDate() + 7);
+    while ([0, 1].includes(d.getDay())) d.setDate(d.getDate() + 1);
+    return [d.getFullYear(), String(d.getMonth()+1).padStart(2,'0'), String(d.getDate()).padStart(2,'0')].join('-');
+  })()`);
+  await fill(home, '#visit-date', reservationDate);
+  await click(home, '.reservas form button');
+  await text(home, 'Nome completo');
+  await fill(home, '[name="guestName"]', 'Reserva Navegador');
+  await fill(home, '[name="whatsapp"]', '11999999999');
+  await fill(home, '[name="email"]', 'navegador@example.com');
+  await click(home, '.reservas form button:not([type="button"])');
+  await text(home, 'Simular aprovação');
+  await evaluate(home, `Array.from(document.querySelectorAll('.reservas button')).find(b => b.textContent === 'Simular recusa').click()`);
+  await text(home, 'Pagamento recusado');
+  await evaluate(home, `Array.from(document.querySelectorAll('.reservas button')).find(b => b.textContent === 'Simular aprovação').click()`);
+  await text(home, 'Código:');
+  const publicCode = await evaluate(home, `document.querySelector('.reservas-code strong').textContent`);
+  const publicGuest = await tab('/minha-reserva?reserva=' + encodeURIComponent(publicCode));
+  await text(publicGuest, 'Reserva confirmada');
+  await home.call('Runtime.evaluate', { expression: 'window.__beforeReservationReload = true' });
+  await home.call('Page.reload');
+  await until(() => evaluate(home, 'window.__beforeReservationReload !== true'), 'novo documento após recarga');
+  await text(home, publicCode);
+  await text(home, 'Cancelar reserva');
+  await evaluate(home, `Array.from(document.querySelectorAll('.reservas button')).find(b => b.textContent === 'Cancelar reserva').click()`);
+  await text(home, 'Confirmar cancelamento');
+  await evaluate(home, `Array.from(document.querySelectorAll('.reservas button')).find(b => b.textContent === 'Confirmar cancelamento').click()`);
+  await text(home, 'Reembolso simulado:');
+  await text(publicGuest, 'Reserva cancelada');
   const reception = await tab('/recepcao');
   await login(reception, '15152018');
   await text(reception, 'Ana Souza');
@@ -479,6 +510,7 @@ try {
         passed: true,
         screenshotDir,
         scenarios: [
+          'reserva pública, recusa/aprovação, consulta por URL, recarga e cancelamento sincronizado',
           'home e rotas',
           'chegada/acomodação',
           'consulta em outra aba',

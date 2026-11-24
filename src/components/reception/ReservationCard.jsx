@@ -81,7 +81,7 @@ export default function ReservationCard({
         </div>
       )}
       {isReception &&
-        !['reservada', 'encerrada'].includes(reservation.status) && (
+        !['reservada', 'encerrada', 'cancelada'].includes(reservation.status) && (
           <label htmlFor={'parking-edit-' + reservation.id}>
             Estacionamento
             <select

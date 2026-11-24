@@ -38,8 +38,10 @@ export default function OrderBill({ command }) {
           : 'Todas as rodadas enviadas foram entregues.'}
       </p>
       <small>
-        Resumo demonstrativo. Crédito da reserva e pagamento serão conectados ao
-        módulo de fechamento.
+        {command.reservationPayment?.status === 'aprovado'
+          ? `Reserva paga (simulada): ${money(command.reservationPayment.amountCents)}. Crédito registrado para o módulo de fechamento; ainda não abatido neste resumo.`
+          : 'Resumo demonstrativo. Esta comanda não possui crédito de reserva registrado.'}
+        {' '}Pagamento e fechamento dependem do módulo de conta.
       </small>
     </section>
   );

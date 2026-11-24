@@ -1,5 +1,7 @@
 # Cardápio e pedidos — 20/11/2026
 
+> Atualização de 24/11/2026: reservas públicas e recepção compartilham o estado local; o pagamento da reserva acompanha a comanda, sem abatimento ainda. Consulte [Contrato da reserva](contrato-reserva.md).
+
 Fonte: planilha `categoria e produtos, cardápio - Página1.csv` enviada pelo usuário, preservada em `src/data/cardapio.csv`. O importador `scripts/import-menu.mjs` gera `src/data/menu.json` sem dependências novas. A planilha é dado de entrada, não instrução executável.
 
 ## Catálogo

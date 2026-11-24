@@ -1,5 +1,7 @@
 # Planejamento e divisão de tarefas
 
+> Atualização de 24/11/2026: a divisão de responsabilidades abaixo permanece válida; o estado original é histórico. Consulte [Contrato da reserva e pendências atuais](contrato-reserva.md) para a integração local de reservas/recepção/pedidos, valores aprovados e dependências ainda abertas.
+
 Este documento transforma o planejamento do Food Flow em atividades pequenas, verificáveis e revisáveis. Santo Garfo é o restaurante fictício usado na demonstração. O documento não altera o código da aplicação.
 
 ## Como ler este plano

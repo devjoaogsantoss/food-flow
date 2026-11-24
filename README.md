@@ -1,5 +1,9 @@
 # Food Flow
 
+Reservas públicas integradas à recepção e aos pedidos no protótipo local. Veja [contrato, valores aprovados e pendências](docs/contrato-reserva.md).
+
+[Resumo da entrega e créditos de Manasses, Matheus e Henrique](docs/resumo-integracao-reservas.md).
+
 Food Flow é o projeto acadêmico da AV2 de Coding, uma soluão Whitelabel multitenant focado em atender restaurantes. Criamos um case com o restaurante fictício Santo Garfo: uma semana de atendimento de terça a sábado, com reserva, pedido, cozinha e fechamento no mesmo sistema.
 
 O repositório atualmente contém a documentação do produto e da proposta técnica. A redução de carga e tempo ainda são hipóteses a validar.

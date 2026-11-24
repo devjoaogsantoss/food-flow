@@ -7,8 +7,9 @@ import '../styles/reception.css';
 const steps = ['Reserva', 'Chegada', 'Acomodação'];
 
 export default function GuestStatusPage() {
-  const [code, setCode] = useState('');
-  const [searched, setSearched] = useState('');
+  const initialCode = new URLSearchParams(window.location.search).get('reserva') ?? '';
+  const [code, setCode] = useState(initialCode);
+  const [searched, setSearched] = useState(initialCode);
   const [status, setStatus] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState('');
@@ -26,6 +27,8 @@ export default function GuestStatusPage() {
       setNotFound(false);
     }
   }, []);
+
+  useEffect(() => { if (initialCode) load(initialCode); }, [initialCode, load]);
 
   // Quando a recepção muda a reserva em outra aba, atualizamos esta página.
   useEffect(() => {

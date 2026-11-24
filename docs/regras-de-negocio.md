@@ -4,7 +4,7 @@ Este documento consolida as regras validadas e o acesso por perfil. [Voltar ao R
 
 ## Reserva
 
-O cardápio é público e não pré-seleciona pratos. Há 18 mesas: 10 para duas pessoas, 6 para quatro e 2 para oito. Os serviços são 17h45, 20h00 e 22h15, de terça a sábado. A reserva exige pagamento simulado de R$ 50, R$ 100 ou R$ 200 conforme a categoria e só confirma com disponibilidade e aprovação. Cancelamento com 12 horas ou mais permite reembolso simulado. Lotação oferece outra data ou lista de espera gratuita, sem garantir vaga ou bloquear mesa.
+O cardápio é público e não pré-seleciona pratos. Há 18 mesas: 10 para duas pessoas, 6 para quatro e 2 para oito. Os serviços são 17h45, 20h00 e 22h15, de terça a sábado. A reserva exige pagamento simulado de R$ 50 por mesa de 2 lugares, R$ 100 por mesa de 4 e R$ 200 por mesa de 8 (associação aprovada em 24/11/2026) e só confirma com disponibilidade e aprovação. Cancelamento com 12 horas ou mais permite reembolso simulado. Lotação oferece outra data ou lista de espera gratuita, sem garantir vaga ou bloquear mesa.
 
 ## Recepção
 
@@ -28,11 +28,11 @@ A conta libera quando há consumo e nenhuma rodada está em preparo. Nova rodada
 |---|---|
 | Visitante | Consultar cardápio, disponibilidade e solicitar lista de espera |
 | Responsável | Criar/cancelar reserva, pedir e pagar quando liberado |
-| Recepção | Confirmar reserva, check-in, acomodação, espera e liberar mesa |
+| Recepção | Check-in de reserva confirmada, acomodação, espera e liberar mesa |
 | Garçom | Lançar pedido, combinar bebida, confirmar entrega e atender chamada |
 | Cozinha | Atualizar preparo e indicar pronto para servir; entrega final confirmada pelo garçom |
 | Admin | Administrar cardápio, serviços e acesso operacional |
 
 Decisões pendentes: tolerância de atraso/ausência e destino do valor quando o consumo é positivo e menor que a taxa.
 
-O protótipo possui site do cliente e acesso demonstrativo da equipe por matrícula: 01510041 (garçom), 15152018 (recepção) e 00589510 (cozinha). Cada sessão mostra apenas a tela do perfil correspondente; isso não implementa autenticação/autorização de servidor. Reserva, pagamento, abatimento do crédito e fechamento completo continuam dependentes dos respectivos módulos.
+O protótipo possui site do cliente e acesso demonstrativo da equipe por matrícula: 01510041 (garçom), 15152018 (recepção) e 00589510 (cozinha). Cada sessão mostra apenas a tela do perfil correspondente; isso não implementa autenticação/autorização de servidor. Reserva pública, pagamento simulado da reserva e lista de espera estão integrados localmente. O crédito acompanha a comanda; abatimento e fechamento completo dependem do módulo de conta. API/banco e autorização de servidor continuam pendentes. Veja [Contrato da reserva](contrato-reserva.md).

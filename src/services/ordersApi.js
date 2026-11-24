@@ -167,6 +167,8 @@ export function createOrdersApi({ storage } = {}) {
       );
       const call = command?.calls?.find((item) => item.id === callId);
       if (!call) throw new Error('Chamada não encontrada.');
+      if (command.status !== 'aberta') throw new Error('Comanda fechada.');
+      if (call.status === 'atendida') return call;
       call.status = 'atendida';
       call.attendedAt = new Date().toISOString();
       saveData(data);
@@ -204,7 +206,10 @@ export function createOrdersApi({ storage } = {}) {
         throw new Error('Rodada não encontrada.');
       }
 
+      if (round.status === 'entregue') return round;
+
       round.status = 'entregue';
+      round.deliveredAt = new Date().toISOString();
 
       round.items.forEach((item) => {
         item.status = 'entregue';
