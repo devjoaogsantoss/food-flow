@@ -45,7 +45,7 @@ function OrdersWorkspace() {
         const guest = reservationId
           ? await receptionApi.getGuestStatus(reservationId)
           : null;
-        commandData = guest?.canOrder
+        commandData = guest?.canViewCommand
           ? commandData.filter(
               (command) =>
                 command.id === guest.commandId &&
@@ -64,7 +64,7 @@ function OrdersWorkspace() {
         (previous) =>
           commandData.find(
             (command) =>
-              command.id === previous?.id && command.status === 'aberta',
+              command.id === previous?.id,
           ) ?? (profile === 'cliente' ? (commandData[0] ?? null) : null),
       );
       setError('');
@@ -82,8 +82,13 @@ function OrdersWorkspace() {
   }, [loadData]);
 
   async function openCommand(commandId) {
-    const command = await ordersApi.getCommand(commandId);
-    setSelectedCommand(command);
+    try {
+      const command = await ordersApi.getCommand(commandId);
+      setSelectedCommand(command);
+      setError('');
+    } catch (failure) {
+      setError(failure.message);
+    }
   }
 
   async function sendOrder(items, options) {
@@ -205,11 +210,11 @@ function OrdersWorkspace() {
             Mesa{' '}
             {
               tables.find((table) => table.id === selectedCommand.tableId)
-                ?.number
+                ?.number ?? selectedCommand.tableId
             }
           </p>
 
-          <OrderComposer
+          {selectedCommand.status === 'aberta' && <OrderComposer
             key={selectedCommand.id}
             onSend={sendOrder}
             loading={loading}
@@ -220,8 +225,9 @@ function OrdersWorkspace() {
               8
             }
             isWaiter={profile === 'garcom'}
-          />
-          {profile === 'cliente' && (
+          />}
+          {selectedCommand.status === 'fechada' && <p role="status">Comanda fechada. Consulte o resumo e procure a recepção para registrar a saída.</p>}
+          {profile === 'cliente' && selectedCommand.status === 'aberta' && (
             <button
               className="menu-action"
               onClick={async () => {
@@ -236,7 +242,15 @@ function OrdersWorkspace() {
               Chamar garçom
             </button>
           )}
-          {profile === 'garcom' &&
+          {profile === 'cliente' && selectedCommand.status === 'aberta' && (
+            <button className="menu-action" onClick={async () => {
+              try {
+                await ordersApi.callWaiter(selectedCommand.id, 'fechamento_presencial');
+                setFeedback('Fechamento presencial solicitado. Aguarde o garçom; a conta ainda não foi paga.');
+              } catch (failure) { setError(failure.message); }
+            }}>Solicitar fechamento presencial</button>
+          )}
+          {profile === 'garcom' && selectedCommand.status === 'aberta' &&
             selectedCommand.calls
               ?.filter((call) => call.status === 'pendente')
               .map((call) => (
@@ -244,7 +258,9 @@ function OrdersWorkspace() {
                   className="order-draft"
                   key={call.id}
                 >
-                  <p>Cliente solicitou atendimento nesta mesa.</p>
+                  <p>{call.type === 'fechamento_presencial'
+                    ? 'Cliente solicitou fechamento presencial. Atender a chamada não registra pagamento nem fecha a conta.'
+                    : 'Cliente solicitou atendimento nesta mesa.'}</p>
                   <button
                     className="menu-action"
                     onClick={async () => {
@@ -264,7 +280,7 @@ function OrdersWorkspace() {
           <OrderRounds
             command={selectedCommand}
             onDeliver={deliverRound}
-            isWaiter={profile === 'garcom'}
+            isWaiter={profile === 'garcom' && selectedCommand.status === 'aberta'}
           />
 
           <OrderBill command={selectedCommand} />

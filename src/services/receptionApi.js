@@ -225,6 +225,8 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       const command = state.orders.commands.find(
         (item) => item.id === reservation.commandId,
       );
+      if (command && command.status !== 'aberta')
+        throw fail('INVALID_STATE', 'Não é possível alterar estacionamento após o fechamento.');
       if (command) command.parkingRequired = parkingRequired;
       writeState(state, store());
       return { changed: true };
@@ -491,6 +493,12 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
         commandId: reservation.commandId,
         table: table ? { number: table.number } : null,
         ...describeGuestStatus(reservation, table),
+        ...(reservation.status === 'acomodada' && readOrders().commands.some(
+          (command) => command.id === reservation.commandId && command.status === 'fechada',
+        ) ? { title: 'Comanda fechada', message: 'Consulte o resumo da comanda e procure a recepção para registrar a saída.' } : {}),
+        canViewCommand: Boolean(reservation.commandId && readOrders().commands.some(
+          (command) => command.id === reservation.commandId && command.reservationId === reservation.id,
+        )),
         canOrder:
           reservation.status === 'acomodada' &&
           readOrders().commands.some(

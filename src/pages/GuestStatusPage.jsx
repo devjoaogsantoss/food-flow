@@ -117,7 +117,7 @@ export default function GuestStatusPage() {
               </ol>
               <h2>{status.title}</h2>
               <p>{status.message}</p>
-              {status.canOrder ? (
+              {status.canViewCommand ? (
                 <a
                   className="rc-btn"
                   href={'/pedidos?reserva=' + encodeURIComponent(status.id)}

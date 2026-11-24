@@ -375,6 +375,13 @@ try {
     `Array.from(document.querySelectorAll('button')).find(button => button.innerText === 'Confirmar atendimento').click()`,
   );
   await text(orders, 'Chamada atendida.');
+  await evaluate(guest, `Array.from(document.querySelectorAll('button')).find(b => b.innerText === 'Solicitar fechamento presencial').click()`);
+  await text(orders, 'Cliente solicitou fechamento presencial.');
+  await evaluate(guest, `Array.from(document.querySelectorAll('button')).find(b => b.innerText === 'Solicitar fechamento presencial').click()`);
+  assert.equal(await evaluate(orders, `Array.from(document.querySelectorAll('.order-draft')).filter(e => e.innerText.includes('fechamento presencial')).length`), 1);
+  await evaluate(orders, `Array.from(document.querySelectorAll('button')).find(b => b.innerText === 'Confirmar atendimento').click()`);
+  await text(orders, 'Chamada atendida.');
+  assert.equal(await evaluate(orders, `JSON.parse(localStorage.getItem('food-flow-state-v1')).orders.commands.find(c => c.id === 101).status`), 'aberta');
   const kitchen = await tab('/cozinha');
   await login(kitchen, '00589510');
   await text(kitchen, 'Mesa 1 · Rodada 1');
@@ -454,6 +461,21 @@ try {
     layoutResults.every((result) => !result.overflow),
     JSON.stringify(layoutResults),
   );
+  // Simula contrato de fechamento; o módulo de pagamento continua externo.
+  await evaluate(reception, `(async () => {
+    const { readState, writeState } = await import('/src/services/localStore.js');
+    const state = readState();
+    const command = state.orders.commands.find(c => c.id === 101);
+    command.rounds.forEach(r => { r.status = 'entregue'; r.items.forEach(i => i.status = 'entregue'); });
+    command.status = 'fechada';
+    writeState(state);
+  })()`);
+  await text(guest, 'Comanda fechada.');
+  assert.equal(await evaluate(guest, `Array.from(document.querySelectorAll('button')).some(b => b.innerText === 'Solicitar fechamento presencial')`), false);
+  assert.equal(await evaluate(guest, `document.querySelectorAll('.menu-path').length`), 0);
+  await guest.call('Page.reload');
+  await text(guest, 'Comanda fechada.');
+  await text(guest, '677,58');
   // Confere os arquivos de imagem nos dois caminhos e guarda capturas para inspeção.
   const screenshotDir = join(profile, 'screenshots');
   await mkdir(screenshotDir, { recursive: true });
@@ -520,6 +542,8 @@ try {
           'matrículas e telas por perfil',
           'à la carte e degustação com conta e estacionamento',
           'chamar garçom e fila de cozinha',
+          'fechamento presencial sem duplicidade e sem pagamento implícito',
+          'comanda fechada consultável após recarga, sem novos pedidos (contrato simulado)',
           'hashes antigos',
           'layout 390/1024/1440',
         ],

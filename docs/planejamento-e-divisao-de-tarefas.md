@@ -4,6 +4,8 @@
 
 Este documento transforma o planejamento do Food Flow em atividades pequenas, verificáveis e revisáveis. Santo Garfo é o restaurante fictício usado na demonstração. O documento não altera o código da aplicação.
 
+> Atualização de 24/11/2026: este backlog registra o escopo original. Consulte [entrega e pendências atuais](entrega-28-11.md) antes de classificar um cartão como não implementado.
+
 ## Como ler este plano
 
 O repositório atualmente contém um protótipo React/Vite e documentação. A existência de uma tela não comprova que um fluxo completo, API ou persistência estejam funcionando. Portanto, cada item abaixo é classificado como implementação a fazer, proposta ou decisão pendente.
@@ -14,7 +16,7 @@ Termos usados: interface é a tela usada pela pessoa; API é a parte que recebe 
 
 A prioridade é demonstrar a jornada: cardápio → reserva → chegada → acomodação → comanda → pedidos → cozinha → entrega → conta → fechamento → saída → limpeza → liberação da mesa.
 
-O cronograma de referência é de 22 dias, com disponibilidade estimada de 1–2 horas diárias por pessoa. Os dias restantes e a data final não foram informados; não são assumidos neste plano. Estoque, CRM, escalas e white label ficam para evolução.
+O cronograma de referência é de 22 dias, com disponibilidade estimada de 1–2 horas diárias por pessoa. Data final confirmada pelo usuário: **28/11/2026**. Consulte a [situação atual](entrega-28-11.md) para o progresso por responsável. Estoque, CRM, escalas e white label ficam para evolução.
 
 ### Estado verificado
 
@@ -272,7 +274,7 @@ Operações que exigem transação ou restrição no banco: reservar a última v
 
 ## Pendências e riscos
 
-- Dias restantes e data final.
+- Data final confirmada: **28/11/2026**. Backend e fechamento precisam ser coordenados até essa data.
 - Associação entre categoria e valores de reserva, se não houver decisão explícita.
 - Tolerância de atraso e ausência.
 - Tratamento da diferença quando o consumo positivo é inferior ao pré-pagamento.
