@@ -18,6 +18,7 @@ export const reservationStatusLabels = {
   em_espera: 'Em espera',
   acomodada: 'Acomodada',
   encerrada: 'Encerrada',
+  cancelada: 'Cancelada',
 };
 
 // "Ação" e "Acao" devem encontrar o mesmo texto: removemos acentos e caixa.
@@ -61,7 +62,8 @@ export function groupReservations(reservations) {
     if (reservation.status === 'reservada') groups.reserved.push(reservation);
     else if (['acomodada', 'encerrada'].includes(reservation.status))
       groups.seated.push(reservation);
-    else groups.arrived.push(reservation);
+    else if (['chegou', 'em_espera'].includes(reservation.status)) groups.arrived.push(reservation);
+    else if (reservation.status === 'cancelada') (groups.cancelled ??= []).push(reservation);
   }
   return groups;
 }
@@ -77,6 +79,8 @@ export function isValidService(service) {
 // Texto mostrado ao responsável. Só a acomodação libera pedidos.
 export function describeGuestStatus(reservation, table = null) {
   switch (reservation.status) {
+    case 'cancelada':
+      return { step: 0, canOrder: false, title: 'Reserva cancelada', message: 'Esta reserva foi cancelada. Faça uma nova reserva para outra visita.' };
     case 'encerrada':
       return {
         step: 3,

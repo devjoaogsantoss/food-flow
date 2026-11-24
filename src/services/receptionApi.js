@@ -1,4 +1,4 @@
-import { localDateString, validateDate } from '../lib/reservations.js';
+import { localDateString, validateDate, validateResponsible, serviceTimes } from '../lib/reservations.js';
 import { buildTables } from '../lib/tables.js';
 import {
   browserStorage,
@@ -20,8 +20,7 @@ function fail(code, message) {
   return error;
 }
 
-// PROVISÓRIO: dados fictícios no lugar da reserva confirmada que será
-// entregue por Manasses. Troque por dados reais quando o contrato existir.
+// Dados demonstrativos preservados. Novas reservas usam o mesmo registro.
 function buildReservation(id, guestName, tableCategory, date, service) {
   return {
     id,
@@ -156,6 +155,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       reservationId: reservation.id,
       partySize: reservation.partySize,
       parkingRequired: reservation.parkingRequired ?? null,
+      reservationPayment: reservation.payment ? { ...reservation.payment } : null,
       status: 'aberta',
       openedAt: now().toISOString(),
       rounds: [],
@@ -199,6 +199,8 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       const reservation = findReservation(data, reservationId);
 
       // Repetir o clique devolve a mesma chegada, sem registrar outra.
+      if (['cancelada', 'encerrada'].includes(reservation.status))
+        throw fail('INVALID_STATE', 'Reserva cancelada ou visita encerrada.');
       if (reservation.status !== 'reservada') {
         return { reservation, changed: false };
       }
@@ -215,7 +217,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
         throw fail('INVALID_INPUT', 'Informe sim ou não para estacionamento.');
       const data = read();
       const reservation = findReservation(data, reservationId);
-      if (reservation.status === 'encerrada')
+      if (['encerrada', 'cancelada'].includes(reservation.status))
         throw fail('INVALID_STATE', 'Visita encerrada.');
       reservation.parkingRequired = parkingRequired;
       const state = readState(store());
@@ -368,12 +370,10 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       const email = String(entry.email ?? '').trim();
       const tableCategory = Number(entry.tableCategory);
       if (
-        !guestName ||
-        !whatsapp ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+        validateResponsible({ guestName, whatsapp, email }) ||
         ![2, 4, 8].includes(tableCategory) ||
         validateDate(entry.date, localDateString(now())) ||
-        !['17:45', '20:00', '22:15'].includes(entry.service)
+        !serviceTimes.includes(entry.service)
       ) {
         throw fail(
           'INVALID_INPUT',
@@ -386,8 +386,8 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
           (item) =>
             item.date === entry.date &&
             item.service === entry.service &&
-            item.whatsapp === whatsapp &&
-            item.status === 'aguardando',
+            item.whatsapp.replace(/\D/g, '') === whatsapp.replace(/\D/g, '') &&
+            ['aguardando', 'contatado'].includes(item.status),
         )
       ) {
         throw fail(
@@ -486,6 +486,8 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
         date: reservation.date,
         service: reservation.service,
         status: reservation.status,
+        tableCategory: reservation.tableCategory,
+        partySize: reservation.partySize,
         commandId: reservation.commandId,
         table: table ? { number: table.number } : null,
         ...describeGuestStatus(reservation, table),

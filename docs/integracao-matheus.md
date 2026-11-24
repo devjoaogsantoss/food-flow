@@ -1,5 +1,7 @@
 # Integração da entrega de Matheus
 
+> Atualização de 24/11/2026: novas reservas públicas já entram na recepção local, incluindo lista de espera e cópia do pagamento na comanda. Os trechos abaixo descrevem a etapa original. Consulte [Contrato da reserva](contrato-reserva.md).
+
 Este registro descreve a etapa de integração original. A etapa seguinte adicionou o catálogo, estacionamento e acesso demonstrativo da equipe por matrícula. Para testar a versão atual, siga [Cardápio e pedidos](cardapio-e-pedidos.md); o check-in agora exige informar estacionamento e a recepção exige sua matrícula.
 
 Identificação solicitada: **ajuste feito por Matheus**.

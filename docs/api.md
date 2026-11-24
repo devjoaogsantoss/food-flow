@@ -1,5 +1,7 @@
 # API proposta
 
+O [contrato da reserva atualizado](contrato-reserva.md) define campos, valores e respostas do adaptador local; os caminhos HTTP abaixo continuam propostos. Consulta individual: GET /reservations/:id, com autorização futura pelo servidor.
+
 Este documento lista contratos mínimos ainda não implementados. [Voltar ao README](../README.md).
 
 | Método e caminho | Papel | Entrada e saída |

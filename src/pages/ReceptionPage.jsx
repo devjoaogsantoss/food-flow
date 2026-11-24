@@ -22,6 +22,7 @@ const columns = [
   },
   { key: 'arrived', title: 'Chegaram', empty: 'Ninguém na recepção agora.' },
   { key: 'seated', title: 'Acomodados', empty: 'Nenhum grupo acomodado.' },
+  { key: 'cancelled', title: 'Canceladas', empty: 'Nenhuma reserva cancelada.' },
 ];
 
 export default function ReceptionPage() {
@@ -186,13 +187,13 @@ function ReceptionWorkspace() {
               className="rc-column"
               aria-labelledby={'rc-col-' + column.key}
             >
-              <h2 id={'rc-col-' + column.key}>
-                {column.title} <span>{groups[column.key].length}</span>
+                <h2 id={'rc-col-' + column.key}>
+                  {column.title} <span>{(groups[column.key] ?? []).length}</span>
               </h2>
-              {groups[column.key].length === 0 && (
+                {(groups[column.key] ?? []).length === 0 && (
                 <p className="rc-empty">{column.empty}</p>
               )}
-              {groups[column.key].map((reservation) => (
+                {(groups[column.key] ?? []).map((reservation) => (
                 <ReservationCard
                   key={reservation.id}
                   reservation={reservation}
