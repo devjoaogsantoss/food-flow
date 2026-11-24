@@ -12,6 +12,6 @@ Créditos por módulo: **Manasses** ([ManassesEmanuel](https://github.com/Manass
 
 Validação local: **46 testes aprovados**, build aprovado e roteiro Chrome aprovado em 390, 1024 e 1440 pixels. Execução remota da CI será verificada no PR.
 
-Pendências: API/banco e autorização de Vinicius; abatimento e fechamento de Israel; revisão humana e publicação. Manasses já possui convite pendente de colaborador no GitHub e precisa aceitá-lo.
+Pendências: API/banco e autorização de Vinicius; abatimento e fechamento de Israel; revisão humana e publicação. Manasses aceitou o convite de colaborador, conforme confirmação do usuário em 24/11/2026.
 
 Contrato completo: [Contrato da reserva](contrato-reserva.md).

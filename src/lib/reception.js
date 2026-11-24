@@ -1,4 +1,4 @@
-import { serviceTimes } from './reservations.js';
+import { serviceTimes, serviceStart } from './reservations.js';
 
 // Perfil que pode executar as ações da recepção (docs/regras-de-negocio.md).
 export const RECEPTION_ROLE = 'recepcao';
@@ -129,4 +129,11 @@ export function describeGuestStatus(reservation, table = null) {
         message: 'Procure a recepção.',
       };
   }
+}
+
+// Indicador informativo: não cancela, libera vagas ou aplica penalidades.
+export function arrivalDelayMinutes(reservation, now = new Date()) {
+  if (reservation.status !== 'reservada') return 0;
+  const elapsed = now - serviceStart(reservation.date, reservation.service);
+  return Number.isFinite(elapsed) ? Math.max(0, Math.floor(elapsed / 60000)) : 0;
 }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  arrivalDelayMinutes,
   reservationStatusLabels,
   tableStatusLabels,
   tablesForCategory,
@@ -33,6 +34,7 @@ export default function ReservationCard({
   const seatedTable = tables.find((table) => table.id === reservation.tableId);
   const selected = options.find((table) => table.id === Number(chosenTable));
   const selectId = 'table-' + reservation.id;
+  const delayMinutes = arrivalDelayMinutes(reservation);
 
   return (
     <article className="rc-card">
@@ -49,6 +51,7 @@ export default function ReservationCard({
         </span>
       </header>
 
+      {delayMinutes > 0 && <p role="status">Serviço iniciado há {delayMinutes} min; chegada ainda não registrada. Confirme a situação com o responsável.</p>}
       {reservation.status === 'reservada' && (
         <div className="rc-actions">
           {isReception ? (

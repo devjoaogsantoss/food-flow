@@ -35,7 +35,7 @@ export default function OrderBill({ command }) {
       <p>
         {bill.hasPendingRounds
           ? 'Há rodadas em preparo ou aguardando entrega.'
-          : 'Todas as rodadas enviadas foram entregues.'}
+          : command.rounds?.length ? 'Todas as rodadas enviadas foram entregues.' : 'Nenhum pedido enviado.'}
       </p>
       <small>
         {command.reservationPayment?.status === 'aprovado'

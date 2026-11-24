@@ -138,7 +138,9 @@ export function createOrdersApi({ storage } = {}) {
       return round;
     },
 
-    async callWaiter(commandId) {
+    async callWaiter(commandId, type = 'atendimento') {
+      if (!['atendimento', 'fechamento_presencial'].includes(type))
+        throw new Error('Tipo de chamada inválido.');
       const data = readData();
       const command = data.commands.find(
         (item) => item.id === Number(commandId),
@@ -146,12 +148,13 @@ export function createOrdersApi({ storage } = {}) {
       if (!command || command.status !== 'aberta')
         throw new Error('Comanda não encontrada ou fechada.');
       const pending = (command.calls ?? []).find(
-        (call) => call.status === 'pendente',
+        (call) => call.status === 'pendente' && (call.type ?? 'atendimento') === type,
       );
       if (pending) return pending;
       const call = {
         id: crypto.randomUUID(),
         status: 'pendente',
+        type,
         createdAt: new Date().toISOString(),
       };
       command.calls ??= [];

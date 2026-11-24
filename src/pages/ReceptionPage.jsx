@@ -71,7 +71,9 @@ function ReceptionWorkspace() {
 
   // Outra aba (a do responsável) também grava no mesmo armazenamento.
   useEffect(() => {
-    return subscribeState(load);
+    const unsubscribe = subscribeState(load);
+    const timer = window.setInterval(load, 60000);
+    return () => { unsubscribe(); window.clearInterval(timer); };
   }, [load]);
 
   // Trava o clique repetido antes mesmo de o React redesenhar a tela.

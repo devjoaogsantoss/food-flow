@@ -25,3 +25,12 @@ Erros esperados: `400` entrada inválida, `401/403` acesso, `404` inexistente, `
 ## Concorrência
 
 A última mesa é disputada dentro de transação com restrição única. Check-in e comanda repetidos retornam o recurso existente. Nova rodada invalida a liberação da conta até entrega. O crédito da reserva recebe marcação única e o pagamento exige trava/idempotência; digital e presencial concorrentes deixam somente uma liquidação aceita. A verificação deve executar requisições simultâneas, repetir as operações e conferir saldo, estados e número de pagamentos.
+
+
+## Adaptadores de integração (24/11/2026)
+
+`src/services/httpClient.js` implementa timeout, sessão same-origin, erros HTTP e chave de idempotência opcional, sem retentativa automática de mutações.
+`src/services/httpModules.js` oferece as mesmas operações de reservas, recepção e pedidos. Os caminhos adicionais (consulta de mesas/comandas, espera, estacionamento, saída, bar e chamadas) estão explicitados nesse arquivo e devem ser acordados com Vinicius antes da ativação.
+As respostas JSON devem manter as estruturas retornadas pelos adaptadores locais. Erros usam `{ code, message }`; `204` retorna `null`.
+O servidor deve aplicar autorização por sessão, proteção CSRF nas mutações, vínculo da reserva, transações e idempotência. `source` identifica o canal do pedido, não concede permissão. IDs em URLs são codificados.
+Não ativar os adaptadores antes de implementar sessão real para cliente/equipe e atualização entre dispositivos. A implementação atual continua usando os adaptadores locais.
