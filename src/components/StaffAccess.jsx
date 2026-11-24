@@ -1,12 +1,25 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getStaff, staffMembers, STAFF_KEY } from '../lib/staff.js';
 import Brand from './Brand.jsx';
+import { remoteEnabled, loginStaff, logoutStaff, request } from '../services/remoteApi.js';
 import '../styles/menu.css';
 
 export default function StaffAccess({ requiredRole, children }) {
   const [staff, setStaff] = useState(getStaff);
   const [registration, setRegistration] = useState('');
   const [error, setError] = useState('');
+  const [password, setPassword] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [checking, setChecking] = useState(remoteEnabled && Boolean(staff));
+  useEffect(() => {
+    if (!remoteEnabled || !staff) return;
+    let active = true;
+    request('GET', '/auth/session').then(session => {
+      if (active && (session.role !== staff.role || session.principal !== staff.registration)) setStaff(null);
+    }).catch(() => { if (active) setStaff(null); }).finally(() => { if (active) setChecking(false); });
+    return () => { active = false; };
+  }, []);
+  if (checking) return <p role="status">Verificando sessão…</p>;
   if (staff && (!requiredRole || staff.role === requiredRole)) {
     return (
       <>
@@ -16,9 +29,10 @@ export default function StaffAccess({ requiredRole, children }) {
           </span>
           <button
             type="button"
-            onClick={() => {
-              sessionStorage.removeItem(STAFF_KEY);
-              setStaff(null);
+            onClick={async () => {
+              try { if (remoteEnabled) await logoutStaff(); }
+              catch (failure) { setError(failure.message); }
+              finally { sessionStorage.removeItem(STAFF_KEY); setStaff(null); }
             }}
           >
             Sair da equipe
@@ -57,15 +71,24 @@ export default function StaffAccess({ requiredRole, children }) {
         </p>
       )}
       <form
-        onSubmit={(event) => {
+        onSubmit={async (event) => {
           event.preventDefault();
           const employee = staffMembers[registration];
           if (!employee) {
             setError('Matrícula não encontrada. Confira os oito dígitos.');
             return;
           }
-          sessionStorage.setItem(STAFF_KEY, registration);
-          window.location.assign(employee.path);
+          if (busy) return;
+          setBusy(true); setError('');
+          try {
+            if (remoteEnabled) {
+              const session = await loginStaff(registration, password);
+              if (session.role !== employee.role) throw new Error('Perfil incompatível com esta matrícula.');
+            }
+            sessionStorage.setItem(STAFF_KEY, registration);
+            window.location.assign(employee.path);
+          } catch (failure) { setError(failure.message); }
+          finally { setBusy(false); }
         }}
       >
         <label htmlFor="staff-registration">
@@ -84,14 +107,14 @@ export default function StaffAccess({ requiredRole, children }) {
             placeholder="Digite os 8 dígitos"
           />
         </label>
-        <button className="menu-action">Entrar na minha área</button>
+        {remoteEnabled && <label htmlFor="staff-password">Senha<input id="staff-password" type="password" autoComplete="current-password" required value={password} onChange={e => setPassword(e.target.value)} /></label>}
+        <button className="menu-action" disabled={busy}>{busy ? 'Entrando…' : 'Entrar na minha área'}</button>
       </form>
       {error && <p role="alert">{error}</p>}
       <p className="menu-description">
-        Acesso demonstrativo neste navegador. Matrícula identifica o perfil;
-        autenticação real será conectada à API.
+        {remoteEnabled ? 'Acesso da equipe com matrícula e senha. Solicite suas credenciais ao responsável pelo sistema.' : 'Modo local de demonstração, sem autenticação de servidor.'}
       </p>
-      <details>
+      {!remoteEnabled && <details>
         <summary>Matrículas para testar</summary>
         <ul>
           {Object.entries(staffMembers).map(([id, entry]) => (
@@ -100,7 +123,7 @@ export default function StaffAccess({ requiredRole, children }) {
             </li>
           ))}
         </ul>
-      </details>
+      </details>}
     </main>
   );
 }

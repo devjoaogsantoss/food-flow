@@ -28,20 +28,16 @@ export function validateReservationChoice(choice, now = new Date()) {
   return '';
 }
 export function localDateString(date = new Date()) {
-  return [
-    date.getFullYear(),
-    String(date.getMonth() + 1).padStart(2, '0'),
-    String(date.getDate()).padStart(2, '0'),
-  ].join('-');
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
 }
 export function validateDate(value, today = localDateString()) {
   if (!value) return 'Selecione uma data para explorar os horários.';
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Selecione uma data válida.';
-  const date = new Date(value + 'T12:00:00');
+  const date = new Date(value + 'T12:00:00Z');
   if (Number.isNaN(date.getTime()) || localDateString(date) !== value)
     return 'Selecione uma data válida.';
   if (value < today) return 'Selecione hoje ou uma data futura.';
-  if ([0, 1].includes(date.getDay()))
+  if ([0, 1].includes(date.getUTCDay()))
     return 'Não há reservas aos domingos e às segundas. Escolha uma data de terça a sábado.';
   return '';
 }

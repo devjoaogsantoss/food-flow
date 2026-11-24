@@ -1,5 +1,7 @@
 # Regras de negócio
 
+> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+
 Este documento consolida as regras validadas e o acesso por perfil. [Voltar ao README](../README.md).
 
 ## Reserva

@@ -1,6 +1,6 @@
 # Food Flow
 
-Reservas públicas integradas à recepção e aos pedidos no protótipo local. Veja [contrato, valores aprovados e pendências](docs/contrato-reserva.md).
+Reservas, recepção, pedidos e cozinha integrados por API Express e SQLite compartilhado. Veja [como executar o servidor, criar senhas e conectar dispositivos](docs/servidor-e-banco.md). Veja [contrato, valores aprovados e pendências](docs/contrato-reserva.md).
 
 [Resumo da entrega e créditos de Manasses, Matheus e Henrique](docs/resumo-integracao-reservas.md).
 
@@ -24,7 +24,7 @@ O repositório atualmente contém a documentação do produto e da proposta téc
 
 ## Execução e integração local
 
-Use `npm.cmd ci`, `npm.cmd run dev`, `npm.cmd test` e `npm.cmd run build` no PowerShell. Cliente: `/` e `/minha-reserva`. Equipe: `/equipe`, com matrícula demonstrativa direcionando a `/pedidos` (garçom), `/recepcao` ou `/cozinha`.
+Use Node 22.19+, `npm.cmd ci`, `npm.cmd run db:setup` e `npm.cmd run dev` no PowerShell. Esse comando inicia API e interface juntas. Cliente: `/` e `/minha-reserva`, com código e senha. Equipe: `/equipe`, com matrícula e senha; credenciais iniciais em `data/initial-access.txt`. Testes: `npm.cmd test`; build: `npm.cmd run build`. O modo antigo de navegador é explícito: `npm.cmd run dev:local`.
 
 A recepção e os pedidos estão conectados como protótipo no navegador, com dados fictícios e sem autenticação. Consulte o [registro da integração de Matheus](docs/integracao-matheus.md) para contratos, preservação dos dados, roteiro de revisão e conexões ainda pendentes.
 

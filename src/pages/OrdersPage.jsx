@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { remoteEnabled } from '../services/remoteApi.js';
 import { subscribeState } from '../services/localStore.js';
 import { receptionApi } from '../services/receptionApi.js';
 
@@ -150,7 +151,7 @@ function OrdersWorkspace() {
         </p>
       </header>
       <p>
-        Ambiente demonstrativo: dados deste navegador e perfis sem autenticação.
+        {remoteEnabled ? 'Comandas compartilhadas com recepção e cozinha. Atualização automática.' : 'Ambiente demonstrativo: dados deste navegador e perfis sem autenticação.'}
       </p>
       {error && <p role="alert">{error}</p>}
       {feedback && <p role="status">{feedback}</p>}

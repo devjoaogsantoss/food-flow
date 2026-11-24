@@ -1,5 +1,5 @@
 // Cliente de integração. Não ativado nas telas até existir servidor autenticado.
-export function createHttpClient({ baseUrl, fetchImpl = globalThis.fetch, timeoutMs = 15000 }) {
+export function createHttpClient({ baseUrl, fetchImpl = globalThis.fetch, timeoutMs = 15000, tokenProvider = () => null }) {
   if (!baseUrl || !Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new Error('Configuração HTTP inválida.');
   return async function request(method, path, { query, body, idempotencyKey } = {}) {
     const search = new URLSearchParams(Object.entries(query ?? {}).filter(([, v]) => v != null));
@@ -8,7 +8,7 @@ export function createHttpClient({ baseUrl, fetchImpl = globalThis.fetch, timeou
     try {
       const response = await fetchImpl(`${baseUrl.replace(/\/$/, '')}${path}${search.size ? '?' + search : ''}`, {
         method, credentials: 'same-origin', signal: controller.signal,
-        headers: { Accept: 'application/json', ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
+        headers: { Accept: 'application/json', ...(tokenProvider(path, method) ? { Authorization: 'Bearer ' + tokenProvider(path, method) } : {}), ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
           ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}) },
         ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
       });

@@ -1,8 +1,9 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { SectionHeading } from './Layout.jsx';
 import { localDateString, serviceTimes, tableCategories, reservationFees, validateResponsible } from '../lib/reservations.js';
 import { reservationsApi as api } from '../services/reservationsApi.js';
 import { subscribeState } from '../services/localStore.js';
+import { remoteEnabled, loginGuest } from '../services/remoteApi.js';
 import { money } from '../lib/menu.js';
 import '../styles/reservations.css';
 
@@ -18,6 +19,9 @@ export default function Reservations() {
   const [availability, setAvailability] = useState(null);
   const [reservation, setReservation] = useState(null);
   const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [lookupPassword, setLookupPassword] = useState('');
+  const inFlight = useRef(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
@@ -41,9 +45,11 @@ export default function Reservations() {
     return () => { active = false; off(); };
   }, []);
   async function run(action) {
+    if (inFlight.current) return;
+    inFlight.current = true;
     setBusy(true); setError(''); setNotice('');
     try { await action(); } catch (failure) { setError(failure.message); }
-    finally { setBusy(false); }
+    finally { inFlight.current = false; setBusy(false); }
   }
   function update(field, value) {
     setChoice(current => ({ ...current, [field]: value }));
@@ -60,7 +66,7 @@ export default function Reservations() {
   async function pay(status) {
     await run(async () => {
       try {
-        const saved = await api.confirm({ ...choice, ...contact, paymentStatus: status });
+        const saved = await api.confirm({ ...choice, ...contact, ...(remoteEnabled ? { password } : {}), paymentStatus: status });
         remember(saved.id); setReservation(saved); setStep('resumo');
       } catch (failure) {
         if (failure.code === 'CONFLICT') { setStep('escolha'); setAvailability(await api.getAvailability(choice)); }
@@ -84,7 +90,7 @@ export default function Reservations() {
           <p>Reserve uma mesa para 2, 4 ou 8 pessoas. A confirmação depende de disponibilidade e pagamento simulado aprovado.</p>
           <p>Taxa por mesa: 2 lugares · R$ 50; 4 lugares · R$ 100; 8 lugares · R$ 200.</p>
           <p>Cancelamentos com pelo menos 12 horas de antecedência permitem reembolso simulado.</p>
-          <p className="small-note">Demonstração salva neste navegador. Não há cobrança real. Use dados fictícios.</p>
+          <p className="small-note">{remoteEnabled ? 'Reserva salva no servidor. Guarde o código e a senha para consultar em outro dispositivo. Pagamento simulado, sem cobrança real.' : 'Demonstração salva neste navegador. Não há cobrança real. Use dados fictícios.'}</p>
           <a href="/minha-reserva">Acompanhar chegada e acomodação</a>
         </div>
         <div className="reservation-form reservas">
@@ -111,9 +117,10 @@ export default function Reservations() {
               <button type="button" disabled={busy} onClick={() => setStep('espera')}>Entrar na lista de espera gratuita</button>
               <p>A lista não reserva mesa nem garante vaga.</p>
             </div>}
-            <form className="reservas-lookup" onSubmit={e => { e.preventDefault(); run(async () => { const found = await api.getReservation(code); remember(found.id); setReservation(found); setStep('resumo'); }); }}>
+            <form className="reservas-lookup" onSubmit={e => { e.preventDefault(); run(async () => { if (remoteEnabled) await loginGuest(code, lookupPassword); const found = await api.getReservation(code); remember(found.id); setReservation(found); setStep('resumo'); }); }}>
               <label htmlFor="reservation-code">Já tem reserva? Consulte pelo código</label>
               <input id="reservation-code" required value={code} onChange={e => setCode(e.target.value)} />
+              {remoteEnabled && <label>Senha da reserva<input type="password" autoComplete="current-password" value={lookupPassword} onChange={e => setLookupPassword(e.target.value)} /></label>}
               <button disabled={busy}>Consultar reserva</button>
             </form>
           </>}
@@ -128,6 +135,7 @@ export default function Reservations() {
             {waiting && <h4>Lista de espera gratuita</h4>}
             {[['guestName', 'Nome completo', 'text'], ['whatsapp', 'WhatsApp', 'tel'], ['email', 'E-mail', 'email']].map(([field, label, type]) =>
               <label key={field}>{label}<input name={field} type={type} required value={contact[field]} onChange={e => setContact(current => ({ ...current, [field]: e.target.value }))} /></label>)}
+            {!waiting && remoteEnabled && <label>Crie uma senha para consultar a reserva<input name="password" type="password" autoComplete="new-password" required minLength={10} maxLength={128} value={password} onChange={e => setPassword(e.target.value)} /></label>}
             {!waiting && <label>Quantidade de pessoas<input name="partySize" type="number" min="1" max={choice.tableCategory} required value={contact.partySize} onChange={e => setContact(current => ({ ...current, partySize: Number(e.target.value) }))} /></label>}
             <div className="reservas-actions"><button type="button" disabled={busy} onClick={() => { setStep('escolha'); setError(''); }}>Voltar</button><button disabled={busy}>{waiting ? 'Confirmar inscrição gratuita' : 'Continuar para pagamento'}</button></div>
           </form>}

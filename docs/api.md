@@ -1,5 +1,7 @@
 # API proposta
 
+> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+
 O [contrato da reserva atualizado](contrato-reserva.md) define campos, valores e respostas do adaptador local; os caminhos HTTP abaixo continuam propostos. Consulta individual: GET /reservations/:id, com autorização futura pelo servidor.
 
 Este documento lista contratos mínimos ainda não implementados. [Voltar ao README](../README.md).

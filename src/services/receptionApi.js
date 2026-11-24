@@ -1,3 +1,4 @@
+import { remoteEnabled, remoteReception } from './remoteApi.js';
 import { localDateString, validateDate, validateResponsible, serviceTimes } from '../lib/reservations.js';
 import { buildTables } from '../lib/tables.js';
 import {
@@ -530,4 +531,4 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
   );
 }
 
-export const receptionApi = createReceptionApi();
+export const receptionApi = remoteEnabled ? remoteReception : createReceptionApi();

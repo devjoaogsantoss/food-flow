@@ -1,3 +1,4 @@
+import { remoteEnabled, remoteReservations } from './remoteApi.js';
 import { reservationFees, serviceStart, validateReservationChoice, validateResponsible, localDateString } from '../lib/reservations.js';
 import { buildSeed } from './receptionApi.js';
 import { browserStorage, readState, writeState, withStateLock } from './localStore.js';
@@ -116,4 +117,4 @@ export function createReservationsApi({ storage, now = () => new Date() } = {}) 
     ['confirm', 'cancel', 'joinWaitlist'].includes(name)
       ? (...args) => withStateLock(store(), () => action(...args)) : action]));
 }
-export const reservationsApi = createReservationsApi();
+export const reservationsApi = remoteEnabled ? remoteReservations : createReservationsApi();
