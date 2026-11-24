@@ -1,5 +1,7 @@
 ﻿# Contrato da reserva e integração — 24/11/2026
 
+> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+
 Decisão aprovada pelo usuário nesta sessão: taxa **por mesa**, 2 lugares = R$ 50,00; 4 = R$ 100,00; 8 = R$ 200,00. Fonte de configuração: src/lib/reservations.js. Serviços: 17:45, 20:00, 22:15; terça a sábado, horário de São Paulo. Categorias exatas, sem acomodação automática em categoria maior. Quantidade de pessoas de 1 até a capacidade escolhida.
 
 ## Registro comum

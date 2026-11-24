@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { remoteEnabled, loginGuest } from '../services/remoteApi.js';
 import Brand from '../components/Brand.jsx';
 import { receptionApi } from '../services/receptionApi.js';
 import { subscribeState } from '../services/localStore.js';
@@ -9,6 +10,7 @@ const steps = ['Reserva', 'Chegada', 'Acomodação'];
 export default function GuestStatusPage() {
   const initialCode = new URLSearchParams(window.location.search).get('reserva') ?? '';
   const [code, setCode] = useState(initialCode);
+  const [password, setPassword] = useState('');
   const [searched, setSearched] = useState(initialCode);
   const [status, setStatus] = useState(null);
   const [notFound, setNotFound] = useState(false);
@@ -37,10 +39,12 @@ export default function GuestStatusPage() {
     });
   }, [load, searched]);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    setSearched(code);
-    load(code);
+    try {
+      if (remoteEnabled) await loginGuest(code, password);
+      setSearched(code); await load(code);
+    } catch (failure) { setError(failure.message); setStatus(null); }
   }
 
   return (
@@ -60,8 +64,7 @@ export default function GuestStatusPage() {
           Digite o código da reserva para ver em que etapa você está.
         </p>
         <p>
-          Consulta demonstrativa, com dados fictícios deste navegador. Exemplo:
-          FF-0001. Não use dados pessoais reais.
+          {remoteEnabled ? 'Use o código e a senha definidos na reserva para consultar em qualquer dispositivo.' : 'Consulta demonstrativa neste navegador. Exemplo: FF-0001.'}
         </p>
         <form
           className="rc-guest-form"
@@ -75,6 +78,7 @@ export default function GuestStatusPage() {
             placeholder="Ex.: FF-0001"
             onChange={(event) => setCode(event.target.value)}
           />
+          {remoteEnabled && <label>Senha da reserva<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} /></label>}
           <button
             type="submit"
             className="rc-btn"

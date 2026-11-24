@@ -1,3 +1,4 @@
+import { remoteEnabled, remoteOrders } from './remoteApi.js';
 import {
   browserStorage,
   readState,
@@ -263,4 +264,4 @@ export function createOrdersApi({ storage } = {}) {
   );
 }
 
-export const ordersApi = createOrdersApi();
+export const ordersApi = remoteEnabled ? remoteOrders : createOrdersApi();

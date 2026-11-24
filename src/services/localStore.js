@@ -1,3 +1,4 @@
+import { remoteEnabled } from './remoteApi.js';
 import { buildTables } from '../lib/tables.js';
 
 export const STATE_KEY = 'food-flow-state-v1';
@@ -122,6 +123,13 @@ export function writeState(state, store = browserStorage()) {
 }
 
 export function subscribeState(listener) {
+  if (remoteEnabled) {
+    let busy = false;
+    const refresh = async () => { if (busy) return; busy = true; try { await listener(); } finally { busy = false; } };
+    const timer = window.setInterval(refresh, 2000);
+    window.addEventListener('focus', refresh);
+    return () => { clearInterval(timer); window.removeEventListener('focus', refresh); };
+  }
   const onStorage = (event) => {
     if (event.key === STATE_KEY || event.key === null) listener();
   };

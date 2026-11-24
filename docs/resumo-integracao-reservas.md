@@ -1,5 +1,7 @@
 # Resumo da integração — 24/11/2026
 
+> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+
 - Reservas conectadas à recepção e aos pedidos, preservando a versão atual do projeto.
 - Serviços padronizados: 17h45, 20h00 e 22h15, de terça a sábado. Disponibilidade pelo inventário de 18 mesas.
 - Taxas por mesa aprovadas por João: 2 lugares = R$ 50; 4 = R$ 100; 8 = R$ 200.

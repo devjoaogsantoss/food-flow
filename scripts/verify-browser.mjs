@@ -10,7 +10,7 @@ const chrome =
   process.env.CHROME_PATH ??
   'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const profile = await mkdtemp(join(tmpdir(), 'food-flow-browser-'));
-const server = await createServer({ server: { host: '127.0.0.1', port: 0 } });
+const server = await createServer({ mode: 'local-demo', server: { host: '127.0.0.1', port: 0 } });
 let browser;
 let browserConnection;
 const connections = [];
