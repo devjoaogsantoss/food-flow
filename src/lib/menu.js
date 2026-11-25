@@ -1,7 +1,7 @@
 import catalog from '../data/menu.json' with { type: 'json' };
 import tastingDescriptions from '../data/tasting-descriptions.json' with { type: 'json' };
 import productDescriptions from '../data/product-descriptions.json' with { type: 'json' };
-
+import { createUuid } from './uuid.js';
 export const money = (cents) =>
   new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -74,7 +74,7 @@ export function buildTastingItem(
   if (servingTime && !/^([01]\d|2[0-3]):[0-5]\d$/.test(servingTime))
     throw new Error('Horário de servir inválido.');
   return {
-    id: crypto.randomUUID(),
+    id: createUuid(),
     kind: 'degustacao',
     productId: selected.id,
     name: selected.name,

@@ -6,6 +6,7 @@ import { receptionApi } from '../services/receptionApi.js';
 import OrderComposer from '../components/orders/OrderComposer';
 import OrderRounds from '../components/orders/OrderRounds';
 import OrderBill from '../components/orders/OrderBill.jsx';
+import CheckoutControls from '../components/orders/CheckoutControls.jsx';
 import StaffAccess from '../components/StaffAccess.jsx';
 
 import { ordersApi } from '../services/ordersApi';
@@ -216,7 +217,7 @@ function OrdersWorkspace() {
           </p>
 
           {selectedCommand.status === 'aberta' && <OrderComposer
-            key={selectedCommand.id}
+            key={`composer-${selectedCommand.id}`}
             onSend={sendOrder}
             loading={loading}
             maxPeople={
@@ -285,6 +286,10 @@ function OrdersWorkspace() {
           />
 
           <OrderBill command={selectedCommand} />
+          <CheckoutControls key={`checkout-${selectedCommand.id}`} command={selectedCommand} profile={profile} onClosed={async () => {
+            await loadData();
+            setFeedback('Comanda encerrada. Procure a recepção para registrar a saída.');
+          }} />
           {selectedCommand.tasting && (
             <p>
               Registro anterior de degustação:{' '}

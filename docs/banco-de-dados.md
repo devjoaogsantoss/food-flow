@@ -1,6 +1,6 @@
 # Banco de dados
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+> API Express, SQLite, autenticação e sincronização implementados. Estado e trabalho restante: [pendências atuais](pendencias-atuais.md). Registros de sessões anteriores abaixo são históricos.
 
 Este documento propõe o modelo persistente e suas restrições. [Voltar ao README](../README.md).
 
@@ -28,4 +28,4 @@ Preços são inteiros em centavos e o item preserva nome e preço no momento do 
 
 ## Restrições críticas
 
-Unicidade deve impedir duas reservas confirmadas para a mesma mesa/serviço, duas comandas ativas para a reserva, aplicação dupla do crédito e liquidações concorrentes. Check-in e acomodação devem ser idempotentes. Mudanças de disponibilidade, crédito e pagamento devem ocorrer em transação atômica; a equipe verifica com testes concorrentes e consulta dos registros após reinício.
+Restri??es SQL impedem duas reservas confirmadas para a mesma mesa/serviço, duas comandas ativas para a reserva, aplicação dupla do crédito e liquidações concorrentes. Check-in e acomodação devem ser idempotentes. Mudanças de disponibilidade, crédito e pagamento devem ocorrer em transação atômica; a equipe verifica com testes concorrentes e consulta dos registros após reinício.

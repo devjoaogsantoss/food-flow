@@ -1,5 +1,6 @@
 import { createHttpClient } from './httpClient.js';
 import { createHttpModules } from './httpModules.js';
+import { createUuid } from '../lib/uuid.js';
 export const remoteEnabled = typeof window !== 'undefined' && import.meta.env?.MODE !== 'local-demo';
 const STAFF_TOKEN = 'food-flow-staff-token';
 const GUEST_TOKENS = 'food-flow-guest-tokens';
@@ -41,7 +42,7 @@ const modules = createHttpModules(request);
 const keys = new Map();
 async function idempotent(name, body, action) {
   const signature = name + JSON.stringify(body);
-  const key = keys.get(signature) ?? crypto.randomUUID(); keys.set(signature, key);
+  const key = keys.get(signature) ?? createUuid(); keys.set(signature, key);
   const result = await action(key);
   keys.delete(signature);
   return result;
@@ -58,6 +59,9 @@ export const remoteReservations = {
   cancel: code => modules.reservations.cancel(normalize(code)),
 };
 export const remoteReception = { ...modules.reception, getGuestStatus: code => modules.reception.getGuestStatus(normalize(code)) };
+export const remoteCheckout = {
+  close: (commandId, body) => idempotent('checkout', { commandId, body }, key => modules.checkout.close(commandId, body, key)),
+};
 export const remoteOrders = { ...modules.orders, createOrder(commandId, items, source, options = {}) {
   return idempotent('order', { commandId, items, source, options }, key => modules.orders.createOrder(commandId, items, source, { ...options, idempotencyKey: key }));
 } };

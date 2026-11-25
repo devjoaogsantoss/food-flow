@@ -12,7 +12,7 @@ const PASSWORD = 'Test-only-password-2026';
 const NOW = () => new Date('2026-11-24T10:00:00-03:00');
 function payload(overrides = {}) { return { date: '2026-11-25', service: '17:45', tableCategory: 2, partySize: 2, guestName: 'Cliente teste', whatsapp: '81999998888', email: 'teste@example.test', paymentStatus: 'aprovado', password: PASSWORD, ...overrides }; }
 async function connect(base, method, path, body, token, key) {
- const response = await fetch(base + '/api' + path, { method, headers: { ...(body ? {'Content-Type':'application/json'} : {}), ...(token ? {Authorization:'Bearer '+token} : {}), ...(key ? {'Idempotency-Key':key} : {}) }, ...(body ? {body:JSON.stringify(body)} : {}) });
+ const response = await fetch(base + '/api' + path, { method, signal: AbortSignal.timeout(10_000), headers: { ...(body ? {'Content-Type':'application/json'} : {}), ...(token ? {Authorization:'Bearer '+token} : {}), ...(key ? {'Idempotency-Key':key} : {}) }, ...(body ? {body:JSON.stringify(body)} : {}) });
  return { status: response.status, data: await response.json() };
 }
 async function fixture(t) {

@@ -40,9 +40,11 @@ Cada requisição de negócio é serializada e executada em `BEGIN IMMEDIATE`; f
 
 `Idempotency-Key` preserva o resultado de criação de reserva/pedido em uma repetição, rejeitando reutilização com outro corpo. Reservas confirmadas, mesmo encerradas, continuam consumindo capacidade daquele serviço; cancelamento devolve a vaga. Check-in e acomodação repetidos não abrem outra comanda.
 
-As tabelas `check_credits` e `settlements` fornecem unicidade de crédito e liquidação por comanda para Israel. O cálculo final, aplicação do crédito, pagamento/fechamento e regras de crédito excedente continuam no escopo dele; nenhuma rota falsa de pagamento foi acrescentada.
+As tabelas `check_credits` e `settlements` garantem unicidade de crédito e liquidação por comanda. O fechamento em `POST /api/checks/:id/payments` calcula e abate crédito na mesma transação da liquidação e do estado fechado. Pagamento é simulado. Crédito excedente não é liquidado: exige atendimento presencial e aprovação do destino da diferença. Consulte [API](api.md) e [pendências atuais](pendencias-atuais.md).
 
 ## Backup e produção
+
+Configuração de processo Node, HTTPS por proxy e volume persistente disponível em [preparação de deploy](deploy.md). `npm run start:production` valida caminho absoluto de `FOOD_FLOW_DB`, exige build e inicializa as contas antes de servir. A configuração Docker usa essa mesma entrada. A publicação não foi executada.
 
 ```powershell
 npm.cmd run db:backup
@@ -66,3 +68,5 @@ Dados antigos do localStorage são preservados e NÃO importados automaticamente
 Referências técnicas: [Express 5](https://expressjs.com/en/5x/api/) e [SQLite no Node 22.19](https://nodejs.org/download/release/v22.19.0/docs/api/sqlite.html).
 
 Validação final em 24/11/2026: 56 testes aprovados, build aprovado e ambos os roteiros Chrome aprovados. O roteiro HTTP usou cinco contextos isolados e conferiu layouts em 390/1024/1440 pixels.
+
+Validação em 25/11/2026: 68 testes, build e roteiro Chrome de API aprovados. O roteiro agora verifica pagamento simulado, ausência de novo formulário de pedido após fechar, saída, limpeza e mesa pronta. A entrada de produção preserva reservas e contas após reinício em diretório temporário. Não substitui validação do volume Docker e do HTTPS no servidor real.

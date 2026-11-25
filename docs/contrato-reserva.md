@@ -1,6 +1,6 @@
 ﻿# Contrato da reserva e integração — 24/11/2026
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+> API Express, SQLite, autenticação e sincronização implementados. Estado e trabalho restante: [pendências atuais](pendencias-atuais.md). Registros de sessões anteriores abaixo são históricos.
 
 Decisão aprovada pelo usuário nesta sessão: taxa **por mesa**, 2 lugares = R$ 50,00; 4 = R$ 100,00; 8 = R$ 200,00. Fonte de configuração: src/lib/reservations.js. Serviços: 17:45, 20:00, 22:15; terça a sábado, horário de São Paulo. Categorias exatas, sem acomodação automática em categoria maior. Quantidade de pessoas de 1 até a capacidade escolhida.
 
@@ -48,7 +48,7 @@ Erros locais: INVALID_INPUT (400), PAYMENT_DECLINED (422), NOT_FOUND (404), CONF
 - João: decisão de valores registrada, contrato compartilhado, base atual preservada e documentação atualizada. Build e testes são verificações locais; Workflow de CI para teste/build criado; execução remota, publicação e revisão humana seguem pendentes.
 - Matheus: reservas novas entram no mesmo registro da recepção; canceladas aparecem separadamente e não fazem check-in; lista pública compartilhada; pagamento transmitido na abertura da comanda.
 - Henrique: pedidos pelos dois canais na mesma comanda, crédito exibido como registro, operações recusadas em comanda fechada e repetição de atendimento/entrega sem alterar o registro concluído.
-- Vinicius: implementar servidor/API, SQLite, identidade/autorização, transações e restrições; adaptar todas as operações locais ao contrato HTTP. Ainda não há sincronização entre dispositivos.
+- Vinicius: servidor/API, SQLite, autenticação, transações, restrições e sincronização entre dispositivos implementados. Consulte [pendências atuais](pendencias-atuais.md).
 - Israel: implementar pagamento/abatimento/fechamento; conectar estado fechada à saída. Caminhos sem consumo e consumo inferior à taxa continuam dependentes desse módulo e da decisão de negócio.
 - Dudu/equipe: revisão humana, evidências, ensaio e testes reais de concorrência/persistência de servidor.
 

@@ -249,7 +249,18 @@ try {
       layouts.push({page,width,overflow});
     }
   }
-  console.log(JSON.stringify({passed:true,isolatedContexts:5,scenarios:['reserva com senha','recepção → garçom → cozinha em contextos isolados','preparo e entrega sincronizados por HTTP','cliente autentica em outro dispositivo','sem estado de negócio em localStorage'],layouts},null,2));
+  await fill(guest,'[aria-label="Fechamento da comanda"] select','pix');
+  await evaluate(guest, `Array.from(document.querySelectorAll('button')).find(b=>b.textContent==='Simular pagamento aprovado e fechar').click()`);
+  await text(guest,'Comanda quitada');
+  assert.equal(await evaluate(guest, `Boolean(document.querySelector('.order-composer'))`),false,'sem formulário de novo pedido após fechar');
+  await evaluate(reception, `Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Registrar saída após fechamento').click()`);
+  await text(reception,'Saída registrada');
+  await until(()=>evaluate(reception, `Boolean(document.querySelector('.rc-table-aguardando_limpeza button'))`),'mesa aguardando limpeza');
+  await click(reception,'.rc-table-aguardando_limpeza button');
+  await until(()=>evaluate(reception, `document.querySelector('.rc-table-list li').classList.contains('rc-table-pronta')`),'mesa liberada após limpeza');
+  const completed = await api.transaction(() => api.db.prepare('SELECT count(*) n FROM settlements').get().n);
+  assert.equal(completed,1,'uma liquidação no banco');
+  console.log(JSON.stringify({passed:true,isolatedContexts:5,scenarios:['reserva com senha','recepção → garçom → cozinha em contextos isolados','preparo e entrega sincronizados por HTTP','cliente autentica em outro dispositivo','sem estado de negócio em localStorage','pagamento simulado → saída → limpeza → mesa pronta'],layouts},null,2));
 } finally {
   if (browserConnection)
     await browserConnection.call('Browser.close').catch(() => {});

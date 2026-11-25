@@ -1,6 +1,12 @@
 # Regras de negócio
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+## Decisões aprovadas em 25/11/2026
+
+- Atraso: indicador exclusivamente informativo; a recepção decide o atendimento. Não cancelar reserva nem liberar vaga automaticamente por atraso.
+- Ausência: tratamento manual pela equipe, sem multa, estorno ou liberação automática de vaga nesta versão.
+- Consumo positivo inferior ao crédito: exibir consumo, crédito e diferença; bloquear fechamento digital e encaminhar ao atendimento presencial. Não automatizar o destino da diferença antes da aprovação da equipe. Enquanto não houver decisão registrada, a comanda não é liquidada automaticamente, inclusive no canal presencial.
+
+> API Express, SQLite, autenticação e sincronização implementados. Estado e trabalho restante: [pendências atuais](pendencias-atuais.md). Registros de sessões anteriores abaixo são históricos.
 
 Este documento consolida as regras validadas e o acesso por perfil. [Voltar ao README](../README.md).
 
@@ -35,6 +41,6 @@ A conta libera quando há consumo e nenhuma rodada está em preparo. Nova rodada
 | Cozinha | Atualizar preparo e indicar pronto para servir; entrega final confirmada pelo garçom |
 | Admin | Administrar cardápio, serviços e acesso operacional |
 
-Decisões pendentes: tolerância de atraso/ausência e destino do valor quando o consumo é positivo e menor que a taxa.
+Atraso e ausência seguem as decisões manuais de 25/11. Destino da diferença de crédito depende de aprovação; veja [pendências atuais](pendencias-atuais.md).
 
-O protótipo possui site do cliente e acesso demonstrativo da equipe por matrícula: 01510041 (garçom), 15152018 (recepção) e 00589510 (cozinha). Cada sessão mostra apenas a tela do perfil correspondente; isso não implementa autenticação/autorização de servidor. Reserva pública, pagamento simulado da reserva e lista de espera estão integrados localmente. O crédito acompanha a comanda; abatimento e fechamento completo dependem do módulo de conta. API/banco e autorização de servidor continuam pendentes. Veja [Contrato da reserva](contrato-reserva.md).
+O modo padrão autentica equipe por matrícula/senha e cliente por código/senha, com perfil e vínculo validados na API. Reservas, recepção, pedidos e cozinha usam SQLite compartilhado. O modo local é exclusivamente demonstrativo. Veja [Contrato da reserva](contrato-reserva.md).
