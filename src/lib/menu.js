@@ -36,9 +36,9 @@ export const tastingMenus = catalog.tastingMenus.map((menu) => ({
 }));
 export const categories = [
   { prefix: 'ENT', label: 'Entradas' },
-  { prefix: 'PRI', label: 'Principais' },
-  { prefix: 'SOB', label: 'Sobremesas' },
-  { prefix: 'BEB', label: 'Bebidas' },
+  { prefix: 'PRI', label: 'Principal' },
+  { prefix: 'SOB', label: 'Sobremesa' },
+  { prefix: 'BEB', label: 'Bebida' },
 ];
 
 export function filterMenu(query = '', prefix = '') {
@@ -54,6 +54,15 @@ export function filterMenu(query = '', prefix = '') {
 }
 
 export const productImage = (id) => `/images/menu/${id}.png`;
+
+export const servingOptions = [
+  { value: 'entrada', label: 'Servir junto com a entrada' },
+  { value: 'principal', label: 'Servir com o prato principal' },
+  { value: 'casa', label: 'Sugestão da casa' },
+];
+// Horários antigos continuam legíveis para preservar pedidos já registrados.
+export const servingLabel = value => servingOptions.find(option => option.value === value)?.label
+  ?? (value ? `Servir às ${value}` : 'Sugestão da casa');
 
 // Congela o nome, preço, composição e escolha de bebida no momento do pedido.
 export function buildTastingItem(
@@ -71,7 +80,7 @@ export function buildTastingItem(
       item.id === beverageCode && item.category === 'Bebida' && item.available,
   );
   if (!beverage) throw new Error('Escolha uma das bebidas deste menu.');
-  if (servingTime && !/^([01]\d|2[0-3]):[0-5]\d$/.test(servingTime))
+  if (servingTime && !servingOptions.some(option => option.value === servingTime) && !/^([01]\d|2[0-3]):[0-5]\d$/.test(servingTime))
     throw new Error('Horário de servir inválido.');
   return {
     id: createUuid(),

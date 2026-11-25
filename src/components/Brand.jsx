@@ -4,7 +4,7 @@ import foodFlowWhite from '../assets/Food_Flow_Logo_Branco.png';
 const logos = {
   foodFlow,
   foodFlowWhite,
-  santoGarfo: null,
+  santoGarfo: '/images/santo-garfo-logo.svg',
 };
 export default function Brand({ restaurant = false, inverse = false }) {
   const name = restaurant ? 'Santo Garfo' : 'Food Flow';

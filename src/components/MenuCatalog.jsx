@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { tastingMenus, money, productImage } from '../lib/menu.js';
+import { tastingMenus, money, productImage, servingOptions } from '../lib/menu.js';
 import '../styles/menu.css';
 import ALaCarteCatalog from './ALaCarteCatalog.jsx';
 
@@ -7,7 +7,7 @@ function TastingCard({ menu, onAdd, maxPeople, disabled }) {
   const [people, setPeople] = useState(1);
   const beverages = menu.items.filter((item) => item.category === 'Bebida');
   const [beverage, setBeverage] = useState(beverages[0].id);
-  const [time, setTime] = useState('');
+  const [time, setTime] = useState('casa');
   return (
     <article className="tasting-menu-card">
       <img
@@ -18,7 +18,6 @@ function TastingCard({ menu, onAdd, maxPeople, disabled }) {
         height="512"
       />
       <div className="tasting-menu-body">
-        <span className="menu-code">{menu.id} · EXPERIÊNCIA COMPLETA</span>
         <h3>{menu.name}</h3>
         {menu.description && (
           <p className="menu-description">{menu.description}</p>
@@ -86,15 +85,14 @@ function TastingCard({ menu, onAdd, maxPeople, disabled }) {
                 </option>
               ))}
             </select>
-            <label htmlFor={'time-' + menu.id}>
-              Horário da bebida (opcional)
-            </label>
-            <input
-              id={'time-' + menu.id}
-              type="time"
-              value={time}
-              onChange={(event) => setTime(event.target.value)}
-            />
+            <fieldset className="flow-serving-options">
+              <legend>Quando servir a bebida?</legend>
+              {servingOptions.map(option => <label key={option.value}>
+                <input type="radio" name={`serving-${menu.id}`} value={option.value}
+                  checked={time === option.value} onChange={() => setTime(option.value)} disabled={disabled} />
+                {option.label}
+              </label>)}
+            </fieldset>
             <p className="menu-line-total">
               {money(menu.priceCents * (Number(people) || 0))}
             </p>
@@ -139,9 +137,9 @@ export default function MenuCatalog({
           className={'menu-path ' + (mode === 'a-la-carte' ? 'is-active' : '')}
           onClick={() => setMode('a-la-carte')}
         >
-          <span>À SUA ESCOLHA</span>
-          <strong>Pedido à la carte</strong>
-          <small>Escolha pratos e quantidades para compartilhar a mesa.</small>
+          <span>POR PRATO</span>
+          <strong>À la carte</strong>
+          <small>Monte a seleção item a item.</small>
         </button>
         <button
           type="button"
@@ -149,9 +147,9 @@ export default function MenuCatalog({
           className={'menu-path ' + (mode === 'degustacao' ? 'is-active' : '')}
           onClick={() => setMode('degustacao')}
         >
-          <span>TRÊS EXPERIÊNCIAS</span>
-          <strong>Pedido do menu degustação</strong>
-          <small>Mar, Terra ou Vegano. Valor por pessoa.</small>
+          <span>VALOR POR PESSOA</span>
+          <strong>Menu degustação</strong>
+          <small>Escolha entre Mar, Terra ou Vegano.</small>
         </button>
       </div>
       {!mode && (

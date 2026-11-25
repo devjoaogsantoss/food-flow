@@ -1,8 +1,10 @@
+import OrderItems from './OrderItems.jsx';
+
 export default function OrderRounds({ command, onDeliver, isWaiter }) {
   if (!command || command.rounds.length === 0) {
     return (
       <section className="rounds-section">
-        <h2>Pedidos da comanda</h2>
+        <h2>Rodadas da comanda</h2>
         <p>Nenhum pedido foi enviado ainda.</p>
       </section>
     );
@@ -10,7 +12,7 @@ export default function OrderRounds({ command, onDeliver, isWaiter }) {
 
   return (
     <section className="rounds-section">
-      <h2>Pedidos da comanda</h2>
+      <h2>Rodadas da comanda</h2>
 
       {command.rounds.map((round) => (
         <article
@@ -29,50 +31,29 @@ export default function OrderRounds({ command, onDeliver, isWaiter }) {
             >
               {round.status === 'entregue'
                 ? 'Todos os itens foram entregues'
-                : 'Em preparo'}
+                : round.readyAt ? 'Aguardando garçom' : round.startedAt ? 'Em preparo' : 'Pedido recebido'}
             </span>
           </div>
 
-          <p>
-            Pedido realizado por:{' '}
-            {round.source === 'garcom' ? 'Garçom' : 'Cliente'}
-          </p>
+          <ol className="order-progress" aria-label={`Timeline do pedido ${round.number}`}>
+            {['Pedido enviado', 'Em preparo', 'Aguardando garçom', 'Entregue'].map((label, index) => {
+              const stage = round.status === 'entregue' ? 3 : round.readyAt ? 2 : round.startedAt ? 1 : 0;
+              return <li key={label} className={index <= stage ? 'is-active' : ''} aria-current={index === stage ? 'step' : undefined}><span aria-hidden="true">{index < stage ? '✓' : index + 1}</span>{label}</li>;
+            })}
+          </ol>
+
+          <p>{round.source === 'garcom' ? 'Pedido registrado pelo garçom.' : 'Pedido enviado pelo cliente.'}</p>
           {round.notes && (
             <p>
               <strong>Observações:</strong> {round.notes}
             </p>
           )}
-          {round.readyAt && round.status !== 'entregue' && (
-            <p>Pronto para servir · aguardando o garçom</p>
-          )}
-
-          <ul>
-            {round.items.map((item) => (
-              <li key={item.id}>
-                {item.quantity}x {item.name} — R${' '}
-                {(item.price * item.quantity).toFixed(2).replace('.', ',')}
-                {item.kind === 'degustacao' && (
-                  <div>
-                    <p>
-                      {item.quantity} pessoas · {item.beverage?.name}
-                      {item.servingTime && ' · bebida às ' + item.servingTime}
-                    </p>
-                    <ul>
-                      {item.courses?.map((course) => (
-                        <li key={course.id}>
-                          {course.category}: {course.name}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+          <OrderItems items={round.items} />
 
           {isWaiter && round.status !== 'entregue' && (
             <button
               className="deliver-button"
+              disabled={!round.readyAt}
               onClick={() => onDeliver(round.id)}
             >
               Confirmar entrega desta rodada

@@ -1,25 +1,27 @@
 import { useCallback, useEffect, useState } from 'react';
 import { remoteEnabled, loginGuest } from '../services/remoteApi.js';
 import Brand from '../components/Brand.jsx';
+import ExperienceTimeline from '../components/ExperienceTimeline.jsx';
+import { ordersApi } from '../services/ordersApi.js';
 import { receptionApi } from '../services/receptionApi.js';
 import { subscribeState } from '../services/localStore.js';
 import '../styles/reception.css';
 
-const steps = ['Reserva', 'Chegada', 'Acomodação'];
-
 export default function GuestStatusPage() {
   const initialCode = new URLSearchParams(window.location.search).get('reserva') ?? '';
   const [code, setCode] = useState(initialCode);
-  const [password, setPassword] = useState('');
+
   const [searched, setSearched] = useState(initialCode);
   const [status, setStatus] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState('');
+  const [command, setCommand] = useState(null);
 
   const load = useCallback(async (value) => {
     if (!value.trim()) return;
     try {
       const result = await receptionApi.getGuestStatus(value);
+      setCommand(result?.canViewCommand ? await ordersApi.getCommand(result.commandId) : null);
       setStatus(result);
       setNotFound(result === null);
       setError('');
@@ -42,7 +44,7 @@ export default function GuestStatusPage() {
   async function handleSubmit(event) {
     event.preventDefault();
     try {
-      if (remoteEnabled) await loginGuest(code, password);
+      if (remoteEnabled) await loginGuest(code);
       setSearched(code); await load(code);
     } catch (failure) { setError(failure.message); setStatus(null); }
   }
@@ -59,12 +61,9 @@ export default function GuestStatusPage() {
         <span>Minha reserva</span>
       </header>
       <main className="rc-page rc-guest">
-        <h1>Acompanhe sua reserva</h1>
+        <h1>Acompanhe sua visita</h1>
         <p className="rc-lead">
-          Digite o código da reserva para ver em que etapa você está.
-        </p>
-        <p>
-          {remoteEnabled ? 'Use o código e a senha definidos na reserva para consultar em qualquer dispositivo.' : 'Consulta demonstrativa neste navegador. Exemplo: FF-0001.'}
+          {remoteEnabled ? 'Informe o código completo recebido na confirmação. Ele dá acesso a esta reserva.' : 'Consulta demonstrativa neste navegador. Experimente com FF-0001.'}
         </p>
         <form
           className="rc-guest-form"
@@ -78,7 +77,6 @@ export default function GuestStatusPage() {
             placeholder="Ex.: FF-0001"
             onChange={(event) => setCode(event.target.value)}
           />
-          {remoteEnabled && <label>Senha da reserva<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} /></label>}
           <button
             type="submit"
             className="rc-btn"
@@ -106,19 +104,7 @@ export default function GuestStatusPage() {
                 {status.guestName} · {status.id} ·{' '}
                 {status.service.replace(':', 'h')}
               </p>
-              <ol className="rc-steps">
-                {steps.map((label, index) => (
-                  <li
-                    key={label}
-                    aria-current={
-                      status.step === index + 1 ? 'step' : undefined
-                    }
-                    className={status.step >= index + 1 ? 'rc-step-done' : ''}
-                  >
-                    {label}
-                  </li>
-                ))}
-              </ol>
+              <h2>Etapas da visita</h2><ExperienceTimeline reservation={status} command={command} />
               <h2>{status.title}</h2>
               <p>{status.message}</p>
               {status.canViewCommand ? (

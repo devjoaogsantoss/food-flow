@@ -10,11 +10,13 @@ export const tableStatusLabels = {
   pronta: 'Pronta',
   ocupada: 'Ocupada',
   aguardando_limpeza: 'Aguardando limpeza',
+  designada: 'Aguardando acomodação',
 };
 
 export const reservationStatusLabels = {
   reservada: 'Com reserva',
   chegou: 'Chegou',
+  mesa_definida: 'Mesa definida',
   em_espera: 'Em espera',
   acomodada: 'Acomodada',
   encerrada: 'Encerrada',
@@ -62,7 +64,7 @@ export function groupReservations(reservations) {
     if (reservation.status === 'reservada') groups.reserved.push(reservation);
     else if (['acomodada', 'encerrada'].includes(reservation.status))
       groups.seated.push(reservation);
-    else if (['chegou', 'em_espera'].includes(reservation.status)) groups.arrived.push(reservation);
+    else if (['chegou', 'em_espera', 'mesa_definida'].includes(reservation.status)) groups.arrived.push(reservation);
     else if (reservation.status === 'cancelada') (groups.cancelled ??= []).push(reservation);
   }
   return groups;
@@ -104,6 +106,8 @@ export function describeGuestStatus(reservation, table = null) {
         message:
           'A recepção está preparando sua mesa. Os pedidos serão liberados depois da acomodação.',
       };
+    case 'mesa_definida':
+      return { step: 2, canOrder: false, title: 'Sua mesa está definida', message: `Aguarde o garçom ou metre acompanhar seu grupo à mesa ${reservation.assignedTableId}. Os pedidos serão liberados após a acomodação.` };
     case 'em_espera':
       return {
         step: 2,

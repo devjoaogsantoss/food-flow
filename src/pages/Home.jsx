@@ -1,215 +1,81 @@
-import Brand from '../components/Brand.jsx';
-import Icon from '../components/Icon.jsx';
-import {
-  Header,
-  Footer,
-  ButtonLink,
-  SectionHeading,
-} from '../components/Layout.jsx';
-import MenuPreview from '../components/MenuPreview.jsx';
-import Reservations from '../components/Reservations.jsx';
-const moments = [
-  {
-    number: '01',
-    icon: 'book',
-    title: 'Antes da visita',
-    text: 'Consulte pratos, descrições e preços com privacidade.',
-    detail: 'Descubra no seu ritmo.',
-  },
-  {
-    number: '02',
-    icon: 'bell',
-    title: 'Durante o atendimento',
-    text: 'Escolha entre fazer pedidos pelo site ou contar com o garçom.',
-    detail: 'A escolha é sempre sua.',
-  },
-  {
-    number: '03',
-    icon: 'check',
-    title: 'No fechamento',
-    text: 'Pague pelo site ou solicite atendimento da equipe.',
-    detail: 'Mais tempo para aproveitar.',
-  },
-];
+import { useEffect, useRef, useState } from 'react';
+import ProductShell from '../components/ProductShell.jsx';
+import { productImage, tastingMenus } from '../lib/menu.js';
+
+function MenuCarousel() {
+  const track = useRef(null);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    const element = track.current;
+    if (!element || paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const timer = window.setInterval(() => {
+      if (element.matches(':hover') || element.contains(document.activeElement)) return;
+      const loopWidth = element.scrollWidth / 2;
+      if (loopWidth > 0 && element.scrollLeft >= loopWidth) element.scrollLeft -= loopWidth;
+      element.scrollLeft += 0.35;
+    }, 40);
+    return () => window.clearInterval(timer);
+  }, [paused]);
+
+  return <>
+  <div className="client-carousel-tools"><p>Deslize para conhecer os menus.</p><button type="button" aria-pressed={paused} aria-label={paused ? 'Retomar rolagem dos menus' : 'Pausar rolagem dos menus'} onClick={() => setPaused(value => !value)}>{paused ? 'Retomar rolagem' : 'Pausar rolagem'}</button></div>
+  <div className="client-tasting-carousel" ref={track} role="region" tabIndex={0} aria-label="Menus degustação, carrossel com rolagem horizontal">
+    {[...tastingMenus, ...tastingMenus].map((menu, index) => {
+      const repeated = index >= tastingMenus.length;
+      return <article className="client-tasting-card" key={`${menu.id}-${index}`} aria-hidden={repeated || undefined}>
+        <div className="client-menu-photo" aria-label={`Pratos do ${menu.name}`}>
+          {menu.items.map((item, itemIndex) => <figure className="client-menu-dish" key={`${item.id}-${itemIndex}`}>
+            <img src={productImage(item.id)} alt={repeated ? '' : item.name} loading="lazy" decoding="async" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = productImage(({ Bebida:'BEB001', Entrada:'ENT002', Principal:'PRI001', Sobremesa:'SOB001' })[item.category] ?? 'PRI001'); }}/>
+            <figcaption>{item.name}</figcaption>
+          </figure>)}
+        </div>
+        <div className="client-tasting-card-copy"><h3>{menu.name}</h3><a className="product-button secondary" href={`/cliente/cardapio?menu=${encodeURIComponent(menu.id)}`} tabIndex={repeated ? -1 : undefined}>Conhecer o menu</a></div>
+      </article>;
+    })}
+  </div></>;
+}
+
 export default function Home() {
-  return (
-    <>
-      <a
-        className="skip-link"
-        href="#conteudo"
-      >
-        Pular para o conteúdo
-      </a>
-      <Header />
-      <main id="conteudo">
-        <section
-          id="inicio"
-          className="hero"
-        >
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <p className="eyebrow">
-                <span className="tiny-line" />À MESA, NO SEU TEMPO
-              </p>
-              <h1>
-                Sua experiência
-                <br className="desktop-break" /> começa antes de
-                <br className="desktop-break" /> chegar à <span>mesa.</span>
-              </h1>
-              <p className="hero-description">
-                Explore o cardápio, conheça os preços e escolha como viver sua
-                experiência gastronômica.
-              </p>
-              <div className="hero-actions">
-                <ButtonLink href="#cardapio">Ver cardápio</ButtonLink>
-                <ButtonLink
-                  href="#reservas"
-                  secondary
-                >
-                  Reservar uma mesa
-                </ButtonLink>
-              </div>
-              <div className="hero-signature">
-                <span>ESTREANDO COM</span>
-                <Brand restaurant />
-              </div>
-            </div>
-            <div
-              className="hero-art"
-              aria-hidden="true"
-            >
-              <div className="art-top">
-                <span>BOA COMIDA. BOAS CONVERSAS.</span>
-                <span>01 / FF</span>
-              </div>
-              <div className="table-setting">
-                <div className="napkin" />
-                <div className="fork">
-                  <i />
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <div className="plate">
-                  <div className="plate-center">
-                    <span>O melhor da experiência?</span>
-                    <strong>Estar presente.</strong>
-                    <span className="plate-rule" />
-                  </div>
-                </div>
-                <div className="knife" />
-              </div>
-              <div className="art-bottom">
-                <span>SANTO GARFO</span>
-                <span>Seu próximo encontro começa aqui.</span>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="section experience-section">
-          <div className="container">
-            <SectionHeading
-              eyebrow="A EXPERIÊNCIA FOOD FLOW"
-              title="Menos espera. Mais presença."
-            >
-              Uma proposta pensada para cada momento da sua visita.
-            </SectionHeading>
-            <div className="moments">
-              {moments.map((moment) => (
-                <article
-                  className="moment"
-                  key={moment.number}
-                >
-                  <div className="moment-top">
-                    <Icon
-                      name={moment.icon}
-                      size={28}
-                    />
-                    <span>{moment.number}</span>
-                  </div>
-                  <h3>{moment.title}</h3>
-                  <p>{moment.text}</p>
-                  <span className="moment-detail">{moment.detail}</span>
-                </article>
-              ))}
-            </div>
-            <p className="scope-note">
-              Conheça a proposta da plataforma. Pedidos e pagamentos fazem parte
-              de uma etapa futura.
-            </p>
-          </div>
-        </section>
-        <section
-          id="restaurante"
-          className="restaurant-section"
-        >
-          <div className="container restaurant-grid">
-            <div className="restaurant-intro">
-              <p className="eyebrow">O PRIMEIRO ENCONTRO</p>
-              <h2>
-                <Brand restaurant />
-              </h2>
-              <span className="restaurant-rule" />
-              <p>
-                O primeiro restaurante da plataforma Food Flow. Duas formas de
-                viver sua experiência, com a liberdade de escolher.
-              </p>
-              <span className="restaurant-caption">
-                Restaurante fictício · Experiência de demonstração
-              </span>
-            </div>
-            <div className="dining-options">
-              <article>
-                <span className="option-index">01 / À SUA ESCOLHA</span>
-                <h3>À la carte</h3>
-                <p>Explore as categorias e escolha a sua experiência.</p>
-                <a href="#cardapio">
-                  Conhecer o cardápio
-                  <Icon
-                    name="arrow"
-                    size={18}
-                  />
-                </a>
-              </article>
-              <article>
-                <span className="option-index">
-                  02 / UMA EXPERIÊNCIA COMPLETA
-                </span>
-                <div className="tasting-heading">
-                  <h3>Menu degustação</h3>
-                  <span className="price">R$ 239,90</span>
-                </div>
-                <p>
-                  Duas entradas, um principal, uma sobremesa e uma opção de duas
-                  bebidas.
-                </p>
-                <span className="dining-note">
-                  Os pratos serão apresentados no cardápio.
-                </span>
-              </article>
-            </div>
-          </div>
-        </section>
-        <MenuPreview />
-        <Reservations />
-        <section
-          id="equipe"
-          className="team-section"
-        >
-          <div className="container team-content">
-            <Icon name="lock" />
-            <div>
-              <h2>Um espaço para quem cuida de cada detalhe.</h2>
-              <p>
-                Área da equipe em preparação. O acesso ao restaurante estará
-                disponível em uma próxima etapa.
-              </p>
-            </div>
-            <span className="badge">Em breve</span>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
-  );
+  useEffect(() => {
+    const root = document.querySelector('.product-home');
+    if (!root) return undefined;
+    let frame = 0;
+    const update = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        root.style.setProperty('--home-bg-scroll', `${Math.round(window.scrollY * 0.12)}px`);
+        frame = 0;
+      });
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', update);
+      if (frame) window.cancelAnimationFrame(frame);
+      root.style.removeProperty('--home-bg-scroll');
+    };
+  }, []);
+
+  return <ProductShell publicHome title="" description="">
+    <section className="client-seasonal-banner" aria-labelledby="seasonal-banner-title">
+      <img className="seasonal-banner-background" src="/images/litoral-tropical-dourado.jpg" alt="" fetchPriority="high"/>
+      <div className="seasonal-banner-copy">
+        <h1 id="seasonal-banner-title">Novo menu <span>sazonal</span></h1>
+        <p>Sabores inspirados no litoral para esta estação.</p>
+        <a className="product-button" href="/cliente/cardapio">Explorar o menu <span aria-hidden="true">→</span></a>
+      </div>
+      <div className="seasonal-banner-visual" role="img" aria-label="Colagem de pratos sobre o retrato do chef">
+        <img className="seasonal-chef-image" src="/images/chef-carmy.jpg" alt="" loading="lazy"/>
+        <span className="seasonal-chef-caption">Criação do <strong>Chef Carmy</strong></span>
+        <img className="seasonal-dish seasonal-dish-main" src={productImage('PRI001')} alt="" loading="lazy"/>
+        <img className="seasonal-dish seasonal-dish-small" src={productImage('ENT002')} alt="" loading="lazy"/>
+        <img className="seasonal-dish seasonal-dish-dessert" src={productImage('SOB001')} alt="" loading="lazy"/>
+        <span className="seasonal-banner-shape" />
+      </div>
+    </section>
+    <section className="client-intro" aria-labelledby="client-intro-title">
+      <div className="client-intro-grid"><h1 id="client-intro-title">A Experiência da Terra ao Mar</h1><div><p>Escolha seus pratos e acompanhe cada etapa do atendimento.</p><div className="product-actions"><a className="product-button" href="/cliente/reservar">Realizar reserva</a><a className="product-button secondary" href="/cliente/cardapio">Conferir cardápio</a></div></div></div>
+    </section>
+    <section className="client-tasting-section" aria-labelledby="client-menus-title"><div className="client-section-label"><span>Cardápio</span></div><div className="client-tasting-heading"><h2 id="client-menus-title">Menus degustação</h2><p>Cada card reúne os pratos de uma experiência.</p></div><MenuCarousel/></section>
+  </ProductShell>;
 }

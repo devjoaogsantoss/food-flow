@@ -2,13 +2,15 @@
 
 Atualizado em 25/11/2026. Prazo acadêmico previsto: 28/11/2026.
 
+> Atualização de produto: duas experiências com navegação própria, identidade visual do manual e passagem recepção → salão. Consulte [experiências do produto](docs/experiencias-produto.md).
+
 ## 1. Resumo executivo
 
 Food Flow é um projeto universitário de atendimento de restaurante. O caso de demonstração é o restaurante fictício Santo Garfo.
 
 O fluxo implementado e validado localmente é:
 
-**Cardápio → reserva → check-in → acomodação → comanda → pedidos → cozinha → entrega → pagamento simulado → saída → limpeza → mesa pronta.**
+**Cardápio → reserva → check-in → recepção define mesa → salão confirma acomodação → comanda → pedidos → cozinha → entrega → pagamento simulado → saída → limpeza → mesa pronta.**
 
 O backend já existe: Express com autenticação, autorização e SQLite persistente. A aplicação não depende exclusivamente de localStorage.
 
@@ -59,7 +61,7 @@ Restrições impedem duplicidade de capacidade, comanda por reserva, comanda abe
 
 ### Autenticação
 
-- Equipe entra por matrícula e senha; cliente por código da reserva e senha.
+- Equipe entra por matrícula e senha; cliente pode acessar por código UUID completo ou, opcionalmente, criar conta com histórico de reservas.
 - Senhas usam scrypt com salt; o servidor armazena hashes de tokens e expira sessões em 12 horas.
 - Há limite de tentativas de login e revogação de sessão.
 - API valida perfil e vínculo da reserva; esconder botões não é a proteção de acesso.

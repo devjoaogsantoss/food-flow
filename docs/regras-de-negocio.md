@@ -12,11 +12,11 @@ Este documento consolida as regras validadas e o acesso por perfil. [Voltar ao R
 
 ## Reserva
 
-O cardápio é público e não pré-seleciona pratos. Há 18 mesas: 10 para duas pessoas, 6 para quatro e 2 para oito. Os serviços são 17h45, 20h00 e 22h15, de terça a sábado. A reserva exige pagamento simulado de R$ 50 por mesa de 2 lugares, R$ 100 por mesa de 4 e R$ 200 por mesa de 8 (associação aprovada em 24/11/2026) e só confirma com disponibilidade e aprovação. Cancelamento com 12 horas ou mais permite reembolso simulado. Lotação oferece outra data ou lista de espera gratuita, sem garantir vaga ou bloquear mesa.
+O cardápio é público e não pré-seleciona pratos. Há 18 mesas: 10 para duas pessoas, 6 para quatro e 2 para oito. Os serviços são 17h45, 20h00 e 22h15, de terça a sábado. A reserva exige pagamento simulado de R$ 50 por mesa de 2 lugares, R$ 100 por mesa de 4 e R$ 200 por mesa de 8 (associação aprovada em 24/11/2026) e só confirma com disponibilidade e aprovação. Cancelamento com 12 horas ou mais permite reembolso simulado. Lotação oferece outras datas ou horários. Lista de espera está desativada nesta versão.
 
 ## Recepção
 
-Somente a recepção faz check-in após a apresentação no balcão. No check-in, informa se a mesa utiliza estacionamento: R$ 7,90 uma vez por mesa, inclusive no menu degustação. Mesa pronta permite acomodação e abertura de comanda. Em atraso, o site informa lounge ou bar; a recepção confirma a acomodação antes da comanda. O bar tem 20 lugares e é controlado pela equipe; pedidos do bar ficam com o barman.
+Somente a recepção faz check-in após a apresentação no balcão. No check-in, informa se a mesa utiliza estacionamento: R$ 7,90 uma vez por mesa, inclusive no menu degustação. A recepção define uma mesa pronta e a encaminha ao salão. O garçom/metre confirma a acomodação física; somente então a comanda é aberta. A mesa definida fica indisponível para outra atribuição. O bar tem 20 lugares e é controlado pela equipe; pedidos do bar ficam com o barman.
 
 ## Pedidos
 
@@ -24,7 +24,7 @@ O responsável da reserva e o garçom podem lançar itens na mesma comanda. Uma 
 
 À la carte: soma dos produtos × quantidades da mesa, mais 10% de serviço e 10% de couvert, ambos calculados separadamente sobre esse subtotal. Degustação: preço do menu × pessoas, sem os adicionais de serviço e couvert. Estacionamento soma R$ 7,90 uma única vez à conta quando utilizado, nos dois caminhos, conforme confirmação do usuário. Ao misturar os caminhos, somente os produtos à la carte recebem serviço e couvert. Valores são calculados em centavos e os preços são registrados no pedido.
 
-A cozinha vê a sequência; cada rodada tem estado próprio: “Em preparo” e “Todos os itens foram entregues”. A cozinha pode indicar “Pronto para servir”, mas o garçom confirma a entrega do último item. O cliente e o garçom revisam itens, quantidades e observações antes de enviar cada rodada.
+A cozinha vê a sequência; cada rodada tem estado próprio: “Em preparo” e “Todos os itens foram entregues”. A cozinha registra o início do preparo e indica “Pronto para servir”; o garçom confirma a entrega somente após esse aviso. O salão pode confirmar “Em refeição” após as entregas; nova rodada remove essa indicação. O cliente e o garçom revisam itens, quantidades e observações antes de enviar cada rodada.
 
 ## Fechamento
 
@@ -34,13 +34,13 @@ A conta libera quando há consumo e nenhuma rodada está em preparo. Nova rodada
 
 | Perfil | Pode executar mudanças principais |
 |---|---|
-| Visitante | Consultar cardápio, disponibilidade e solicitar lista de espera |
+| Visitante | Consultar cardápio e disponibilidade |
 | Responsável | Criar/cancelar reserva, pedir e pagar quando liberado |
-| Recepção | Check-in de reserva confirmada, acomodação, espera e liberar mesa |
-| Garçom | Lançar pedido, combinar bebida, confirmar entrega e atender chamada |
+| Recepção | Check-in, estacionamento, definir mesa, acompanhar atendimento, controlar bar e registrar saída após quitação |
+| Garçom/metre | Confirmar acomodação, lançar pedido, entregar após preparo, atender chamada, confirmar refeição, auxiliar pagamento e liberar mesa após limpeza |
 | Cozinha | Atualizar preparo e indicar pronto para servir; entrega final confirmada pelo garçom |
-| Admin | Administrar cardápio, serviços e acesso operacional |
+| Administração | Ambiente separado por função; cadastro de cardápio e serviços não é oferecido nesta versão |
 
 Atraso e ausência seguem as decisões manuais de 25/11. Destino da diferença de crédito depende de aprovação; veja [pendências atuais](pendencias-atuais.md).
 
-O modo padrão autentica equipe por matrícula/senha e cliente por código/senha, com perfil e vínculo validados na API. Reservas, recepção, pedidos e cozinha usam SQLite compartilhado. O modo local é exclusivamente demonstrativo. Veja [Contrato da reserva](contrato-reserva.md).
+O modo padrão autentica a equipe por matrícula/senha. O cliente pode usar o código UUID completo, sem criar conta, ou optar por conta com senha protegida por hash para reunir reservas no histórico; reservas anteriores podem ser vinculadas com o respectivo código. Reservas, recepção, pedidos e cozinha usam SQLite compartilhado. O modo local é exclusivamente demonstrativo. Veja [Contrato da reserva](contrato-reserva.md).

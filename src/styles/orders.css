@@ -4,7 +4,8 @@
   margin: 0 auto;
   padding: 30px 20px;
   color: #222;
-  font-family: Arial, sans-serif;
+  font-family: var(--font);
+  font-size: 1rem;
 }
 
 .orders-title {

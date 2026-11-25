@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Modal from '../Modal.jsx';
+import TableIcon from '../TableIcon.jsx';
 import {
   arrivalDelayMinutes,
   reservationStatusLabels,
@@ -26,6 +28,8 @@ export default function ReservationCard({
   onParking,
 }) {
   const [chosenTable, setChosenTable] = useState('');
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [draftTable, setDraftTable] = useState('');
   const [parking, setParking] = useState('');
   const options = tablesForCategory(tables, reservation.tableCategory);
   const waitingTable = tables.find(
@@ -33,7 +37,7 @@ export default function ReservationCard({
   );
   const seatedTable = tables.find((table) => table.id === reservation.tableId);
   const selected = options.find((table) => table.id === Number(chosenTable));
-  const selectId = 'table-' + reservation.id;
+  const draftSelection = options.find(table => table.id === Number(draftTable));
   const delayMinutes = arrivalDelayMinutes(reservation);
 
   return (
@@ -116,24 +120,31 @@ export default function ReservationCard({
           </p>
           {isReception ? (
             <>
-              <label htmlFor={selectId}>
-                Mesa para {reservation.tableCategory} lugares
-              </label>
-              <select
-                id={selectId}
-                value={chosenTable}
-                onChange={(event) => setChosenTable(event.target.value)}
-              >
-                <option value="">Selecione a mesa</option>
-                {options.map((table) => (
-                  <option
-                    key={table.id}
-                    value={table.id}
-                  >
-                    Mesa {table.number} — {tableStatusLabels[table.status]}
-                  </option>
-                ))}
-              </select>
+              <button type="button" className="rc-btn rc-btn-secondary flow-picker-trigger"
+                data-table-picker={reservation.id} aria-haspopup="dialog" disabled={busy}
+                onClick={() => { setDraftTable(chosenTable); setPickerOpen(true); }}>
+                <TableIcon capacity={reservation.tableCategory} />
+                {selected ? `Mesa ${selected.number} · ${tableStatusLabels[selected.status]}` : 'Selecionar mesa'}
+              </button>
+              {pickerOpen && <Modal title={`Escolha uma mesa · ${reservation.tableCategory} lugares`} onClose={() => setPickerOpen(false)}>
+                <p>Selecione uma mesa pronta para acomodar o grupo.</p>
+                {!options.length && <p>Nenhuma mesa disponível nesta categoria.</p>}
+                <div className="flow-table-grid">
+                  {options.map(table => <button key={table.id} type="button"
+                    data-table-choice={table.id}
+                    className={`flow-table-option ${table.status === 'aguardando_limpeza' ? 'is-cleaning' : table.status !== 'pronta' ? 'is-unavailable' : ''}`}
+                    aria-pressed={Number(draftTable) === table.id}
+                    aria-label={`Mesa ${table.number}, ${table.capacity} lugares, ${tableStatusLabels[table.status]}`}
+                    disabled={busy || table.status !== 'pronta'} onClick={() => setDraftTable(String(table.id))}>
+                    <TableIcon capacity={table.capacity} /><strong>Mesa {table.number}</strong>
+                    <small>{table.capacity} lugares</small><small>{tableStatusLabels[table.status]}</small>
+                  </button>)}
+                </div>
+                <div className="flow-dialog-actions">
+                  <button type="button" className="rc-btn rc-btn-secondary" onClick={() => setPickerOpen(false)}>Cancelar</button>
+                  <button type="button" className="rc-btn" disabled={!draftSelection || draftSelection.status !== 'pronta' || busy} onClick={() => { setChosenTable(draftTable); setPickerOpen(false); }}>Usar mesa selecionada</button>
+                </div>
+              </Modal>}
               {selected?.status === 'pronta' ? (
                 <button
                   type="button"
@@ -143,16 +154,7 @@ export default function ReservationCard({
                 >
                   Confirmar acomodação
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  className="rc-btn rc-btn-secondary"
-                  disabled={busy || !selected}
-                  onClick={() => onWait(reservation.id, selected.id)}
-                >
-                  Registrar espera
-                </button>
-              )}
+              ) : <p className="rc-hint">Escolha uma mesa pronta para continuar.</p>}
             </>
           ) : (
             <p className="rc-hint">Somente a recepção acomoda o grupo.</p>
@@ -190,7 +192,7 @@ export default function ReservationCard({
             Mesa {seatedTable?.number} · Comanda #{reservation.commandId} ·
             acomodada às {formatTime(reservation.seatedAt)}.
           </p>
-          <a href="/pedidos">Consultar comandas</a>
+          <a href={'/minha-reserva?reserva=' + encodeURIComponent(reservation.id)} target="_blank" rel="noreferrer">Abrir experiência do cliente ↗</a>
           {isReception && (
             <button
               type="button"

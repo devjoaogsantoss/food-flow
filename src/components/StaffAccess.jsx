@@ -60,9 +60,8 @@ export default function StaffAccess({ requiredRole, children }) {
       >
         <Brand />
       </a>
-      <p className="menu-code">ÁREA DA EQUIPE</p>
       <h1>Acesso por matrícula</h1>
-      <p>Entre para acessar as funções do seu atendimento.</p>
+      <p>Use suas credenciais para entrar.</p>
       {staff && (
         <p role="alert">
           Sua matrícula é de {staff.label}.{' '}
@@ -112,7 +111,7 @@ export default function StaffAccess({ requiredRole, children }) {
       </form>
       {error && <p role="alert">{error}</p>}
       <p className="menu-description">
-        {remoteEnabled ? 'Acesso da equipe com matrícula e senha. Solicite suas credenciais ao responsável pelo sistema.' : 'Modo local de demonstração, sem autenticação de servidor.'}
+        {remoteEnabled ? 'Precisa de acesso? Solicite as credenciais ao responsável pelo sistema.' : 'Demonstração local, sem autenticação do servidor.'}
       </p>
       {!remoteEnabled && <details>
         <summary>Matrículas para testar</summary>

@@ -38,7 +38,8 @@ async function fixture(t) {
     assert.equal(created.status, 200);
     const reservation = created.data;
     assert.equal((await api('POST', `/reservations/${reservation.id}/check-in`, { parkingRequired: false }, tokens.rec)).status, 200);
-    const seated = await api('POST', `/reservations/${reservation.id}/accommodation`, { tableId }, tokens.rec);
+    assert.equal((await api('POST', `/reservations/${reservation.id}/table`, { tableId }, tokens.rec)).status, 200);
+    const seated = await api('POST', `/floor/accommodations/${reservation.id}`, {}, tokens.waiter);
     assert.equal(seated.status, 200);
     return { reservation, command: seated.data.command, token: reservation.session.token };
   }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import MenuCatalog from '../MenuCatalog.jsx';
-import { menu, tastingMenus, money } from '../../lib/menu.js';
+import { menu, tastingMenus, money, servingLabel } from '../../lib/menu.js';
 
 export default function OrderComposer({
   onSend,
@@ -30,7 +30,7 @@ export default function OrderComposer({
             : { ...entry, quantity: entry.quantity + item.quantity },
       );
     });
-    setFeedback('Adicionado à rodada. Revise e envie o pedido abaixo.');
+    setFeedback('Item adicionado.');
   }
   const lines = items.map((item) => {
     const product =
@@ -60,11 +60,11 @@ export default function OrderComposer({
       className="order-composer"
       aria-label="Anotar novo pedido"
     >
-      <h2>{isWaiter ? 'Anotar pedido da mesa' : 'O que vamos pedir?'}</h2>
+      <h2>{isWaiter ? 'Anotar pedido da mesa' : 'Escolha no cardápio'}</h2>
       <p>
         {isWaiter
-          ? 'Escolha os itens, informe quantidades, confira a rodada e envie para a cozinha.'
-          : 'Uma pessoa faz o pedido da mesa. Você também pode chamar o garçom.'}
+          ? 'Registre os itens desta mesa e envie a rodada para a cozinha.'
+          : 'Adicione os itens e revise a rodada antes de enviar.'}
       </p>
       <MenuCatalog
         onAdd={addItem}
@@ -87,7 +87,7 @@ export default function OrderComposer({
                 {item.kind === 'degustacao' && (
                   <small>
                     Bebida: {item.beverageCode}
-                    {item.servingTime && ' · ' + item.servingTime}
+                    {' · ' + servingLabel(item.servingTime)}
                   </small>
                 )}
                 <span>{money(item.total)}</span>

@@ -7,20 +7,30 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import './styles/index.css';
+import './styles/experience.css';
+import './styles/product.css';
 
 const Home = lazy(() => import('./pages/Home.jsx'));
 const OrdersPage = lazy(() => import('./pages/OrdersPage.jsx'));
 const ReceptionPage = lazy(() => import('./pages/ReceptionPage.jsx'));
-const GuestStatusPage = lazy(() => import('./pages/GuestStatusPage.jsx'));
 const StaffPage = lazy(() => import('./pages/StaffPage.jsx'));
 const KitchenPage = lazy(() => import('./pages/KitchenPage.jsx'));
+const ClientPage = lazy(() => import('./pages/ClientPage.jsx'));
+const WaiterPage = lazy(() => import('./pages/WaiterPage.jsx'));
+const BookingPage = lazy(() => import('./pages/BookingPage.jsx'));
+const CatalogPage = lazy(() => import('./pages/CatalogPage.jsx'));
+const DemoPage = lazy(() => import('./pages/DemoPage.jsx'));
 const pages = {
   home: Home,
   orders: OrdersPage,
   reception: ReceptionPage,
-  guest: GuestStatusPage,
   staff: StaffPage,
   kitchen: KitchenPage,
+  client: ClientPage,
+  waiter: WaiterPage,
+  booking: BookingPage,
+  catalog: CatalogPage,
+  demo: DemoPage,
 };
 
 function Root() {
