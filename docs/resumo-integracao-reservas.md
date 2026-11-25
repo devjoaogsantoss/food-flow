@@ -20,6 +20,8 @@ Contrato completo: [Contrato da reserva](contrato-reserva.md).
 
 ## Créditos da entrega de 25/11/2026
 
+- **Eduardo José Vera Cruz de Souza (Dudu)** ([ejose28dudu-boop](https://github.com/ejose28dudu-boop)): créditos de todos os testes e verificações de qualidade realizados nesta entrega, conforme responsabilidade da equipe e solicitação de João. Execução automatizada assistida pelo Codex; revisão e ensaio humanos não presumidos. Veja [testes e demonstração](testes-e-demonstracao.md).
+
 - **Vinicius Guedes Fagundes** ([Vinicius-Guedes-Fagundes](https://github.com/Vinicius-Guedes-Fagundes)): entrega de infraestrutura/API/SQLite já integrada à base e correção de UUID recebida no ZIP e incorporada no PR #8.
 - **Israel Thiago** ([IsraelThiagoOficial](https://github.com/IsraelThiagoOficial)): crédito pelo módulo de cozinha, conta, pagamento simulado e fechamento, conforme divisão da equipe. O fechamento desta entrega foi implementado com assistência do Codex a pedido de João enquanto Israel estava sem acesso a PC.
 
