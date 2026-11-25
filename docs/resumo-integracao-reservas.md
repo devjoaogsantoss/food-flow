@@ -17,3 +17,10 @@ Validação local: **46 testes aprovados**, build aprovado e roteiro Chrome apro
 API/banco e autorização já implementados. Trabalho restante: [pendências atuais](pendencias-atuais.md). Manasses aceitou o convite de colaborador, conforme confirmação do usuário em 24/11/2026.
 
 Contrato completo: [Contrato da reserva](contrato-reserva.md).
+
+## Créditos da entrega de 25/11/2026
+
+- **Vinicius Guedes Fagundes** ([Vinicius-Guedes-Fagundes](https://github.com/Vinicius-Guedes-Fagundes)): entrega de infraestrutura/API/SQLite já integrada à base e correção de UUID recebida no ZIP e incorporada no PR #8.
+- **Israel Thiago** ([IsraelThiagoOficial](https://github.com/IsraelThiagoOficial)): crédito pelo módulo de cozinha, conta, pagamento simulado e fechamento, conforme divisão da equipe. O fechamento desta entrega foi implementado com assistência do Codex a pedido de João enquanto Israel estava sem acesso a PC.
+
+Créditos e coautoria registrados a pedido de João. Não representam revisão ou aprovação técnica já realizada pelos integrantes. O convite de acesso de Vinicius ainda está pendente de aceite; Israel já é colaborador do repositório.

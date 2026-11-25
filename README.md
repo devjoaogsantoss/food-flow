@@ -2,7 +2,7 @@
 
 Reservas, recepção, pedidos e cozinha integrados por API Express e SQLite compartilhado. Veja [como executar o servidor, criar senhas e conectar dispositivos](docs/servidor-e-banco.md). Veja [contrato, valores aprovados e pendências](docs/contrato-reserva.md).
 
-[Resumo da entrega e créditos de Manasses, Matheus e Henrique](docs/resumo-integracao-reservas.md).
+[Resumo da entrega e créditos de Manasses, Matheus, Henrique, Vinicius e Israel](docs/resumo-integracao-reservas.md).
 
 Food Flow é o projeto acadêmico da AV2 de Coding, uma soluão Whitelabel multitenant focado em atender restaurantes. Criamos um case com o restaurante fictício Santo Garfo: uma semana de atendimento de terça a sábado, com reserva, pedido, cozinha e fechamento no mesmo sistema.
 
