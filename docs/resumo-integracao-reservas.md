@@ -1,6 +1,6 @@
 # Resumo da integração — 24/11/2026
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+> API Express, SQLite, autenticação e sincronização implementados. Estado e trabalho restante: [pendências atuais](pendencias-atuais.md). Registros de sessões anteriores abaixo são históricos.
 
 - Reservas conectadas à recepção e aos pedidos, preservando a versão atual do projeto.
 - Serviços padronizados: 17h45, 20h00 e 22h15, de terça a sábado. Disponibilidade pelo inventário de 18 mesas.
@@ -14,6 +14,6 @@ Créditos por módulo: **Manasses** ([ManassesEmanuel](https://github.com/Manass
 
 Validação local: **46 testes aprovados**, build aprovado e roteiro Chrome aprovado em 390, 1024 e 1440 pixels. Execução remota da CI será verificada no PR.
 
-Pendências: API/banco e autorização de Vinicius; abatimento e fechamento de Israel; revisão humana e publicação. Manasses aceitou o convite de colaborador, conforme confirmação do usuário em 24/11/2026.
+API/banco e autorização já implementados. Trabalho restante: [pendências atuais](pendencias-atuais.md). Manasses aceitou o convite de colaborador, conforme confirmação do usuário em 24/11/2026.
 
 Contrato completo: [Contrato da reserva](contrato-reserva.md).

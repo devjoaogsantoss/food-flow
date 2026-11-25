@@ -39,13 +39,13 @@ Dados corrompidos ou incompatíveis geram erro e são preservados. Um navegador 
 
 | Origem/destino | Contrato mínimo | Situação |
 |---|---|---|
-| Reservas → recepção | Reserva confirmada: `id`, `guestName`, `partySize`, `tableCategory` numérica (2/4/8), `date` local AAAA-MM-DD, `service` HH:mm; o servidor valida disponibilidade e pagamento antes de confirmar | Entrega/API de Manasses ausente; dados fictícios |
+| Reservas → recepção | Reserva confirmada: `id`, `guestName`, `partySize`, `tableCategory` numérica (2/4/8), `date` local AAAA-MM-DD, `service` HH:mm; o servidor valida disponibilidade e pagamento antes de confirmar | Reservas integradas à API autenticada |
 | Recepção → pedidos | Comanda: `id`, `reservationId`, `tableId`, `status: aberta`, `openedAt`, `rounds: []`, `tasting: null`; mesa referencia `commandId` | Conectado no protótipo local |
 | Pedidos → fechamento | Rodadas com estado `em preparo`/`entregue`, itens e preços registrados; novas rodadas bloqueiam fechamento | Fechamento/pagamento de Israel ausente |
 | Fechamento → recepção | Comanda `fechada`, sem rodadas pendentes; recepção registra saída, limpeza e liberação | Regra local implementada e testada com contrato simulado; sem jornada completa na interface |
-| API → todos | Identidade, perfis, vínculo do responsável com reserva, transações, restrições únicas e armazenamento persistente | API Node/Express e SQLite de Vinicius ausentes |
+| API → todos | Identidade, perfis, vínculo do responsável com reserva, transações, restrições únicas e armazenamento persistente | API Express e SQLite implementados |
 
-Na API futura, reaproveitar os caminhos propostos em `docs/api.md`: check-in, accommodation, orders, checks e release. Autorização deve ocorrer no servidor; códigos sequenciais e seletores de perfil são apenas demonstração. Estado físico da mesa é global; disponibilidade de reservas é por data e serviço. Capacidade exatamente igual à categoria foi preservada da entrega e ainda precisa de confirmação humana.
+A API atual implementa os caminhos descritos em `docs/api.md`: check-in, accommodation, orders, checks e release. Autorização deve ocorrer no servidor; códigos sequenciais e seletores de perfil são apenas demonstração. Estado físico da mesa é global; disponibilidade de reservas é por data e serviço. Capacidade exatamente igual à categoria foi preservada da entrega e ainda precisa de confirmação humana.
 
 ## Verificação e roteiro de revisão
 
@@ -57,4 +57,4 @@ Resultado no Chrome headless: roteiro aprovado para Home/rotas, chegada/acomoda�
 
 Para o review humano: abrir a Home, testar os acessos em desktop e celular, consultar FF-0001, registrar chegada/acomodação na recepção, abrir a comanda pelo cliente e enviar pedidos pelos dois perfis. Em outra aba de pedidos, conferir a atualização de novas acomodações. Testar FF-0003 com mesa 3 aguardando limpeza, limites do bar e lista de espera. A saída deve ser recusada enquanto a conta estiver aberta.
 
-Permanecem pendentes a entrega real de reservas, API/banco, autenticação/autorização, fechamento/pagamento, sincronização entre dispositivos e revisão humana. Não houve commit, push ou deploy.
+O registro acima é histórico; reservas, API, banco, autenticação e sincronização foram implementados posteriormente. Consulte [pendências atuais](pendencias-atuais.md). Não houve commit, push ou deploy.

@@ -29,3 +29,24 @@ export function calculateBill(command) {
     parkingPending: command.parkingRequired == null,
   };
 }
+
+// Prévia financeira: nenhum crédito é aplicado ou pagamento registrado aqui.
+export function checkoutSummary(command) {
+  const bill = calculateBill(command);
+  const creditCents = command.reservationPayment?.status === 'aprovado'
+    ? command.reservationPayment.amountCents : 0;
+  const hasConsumption = bill.aLaCarteCents + bill.tastingCents > 0;
+  const balanceCents = bill.totalCents - creditCents;
+  const manualRequired = hasConsumption && balanceCents < 0;
+  const hasPendingItems = (command.rounds ?? []).some(round =>
+    round.items?.some(item => item.status !== 'entregue'));
+  const blocked = command.status !== 'aberta' || bill.hasPendingRounds || hasPendingItems || bill.parkingPending;
+  return {
+    ...bill, creditCents, balanceCents, hasConsumption, manualRequired,
+    dueCents: Math.max(0, balanceCents),
+    differenceCents: Math.max(0, -balanceCents),
+    canPayDigital: !blocked && hasConsumption && !manualRequired,
+    canCloseInPerson: !blocked && !manualRequired,
+    hasPendingItems,
+  };
+}

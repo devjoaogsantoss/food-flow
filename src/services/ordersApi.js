@@ -5,7 +5,7 @@ import {
   writeState,
   withStateLock,
 } from './localStore.js';
-
+import { createUuid } from '../lib/uuid.js';
 import { menu, buildTastingItem } from '../lib/menu.js';
 export { menu } from '../lib/menu.js';
 
@@ -109,7 +109,7 @@ export function createOrdersApi({ storage } = {}) {
         }
 
         return {
-          id: crypto.randomUUID(),
+          id: createUuid(),
           productId: product.id,
           kind: 'a-la-carte',
           name: product.name,
@@ -121,7 +121,7 @@ export function createOrdersApi({ storage } = {}) {
       });
 
       const round = {
-        id: crypto.randomUUID(),
+        id: createUuid(),
         number: command.rounds.length + 1,
         source,
         notes: String(options.notes ?? '')
@@ -153,7 +153,7 @@ export function createOrdersApi({ storage } = {}) {
       );
       if (pending) return pending;
       const call = {
-        id: crypto.randomUUID(),
+        id: createUuid(),
         status: 'pendente',
         type,
         createdAt: new Date().toISOString(),

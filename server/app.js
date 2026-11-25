@@ -7,16 +7,23 @@ import { createReservationsApi } from '../src/services/reservationsApi.js';
 import { createReceptionApi } from '../src/services/receptionApi.js';
 import { createOrdersApi, menu } from '../src/services/ordersApi.js';
 import { readState } from '../src/services/localStore.js';
+import { createCheckoutApi } from '../src/services/checkoutApi.js';
 
 const fail = (code, message) => { throw Object.assign(new Error(message), { code }); };
-const statusCodes = { INVALID_INPUT: 400, UNAUTHORIZED: 401, FORBIDDEN: 403, NOT_FOUND: 404, CONFLICT: 409, INVALID_STATE: 422, PAYMENT_DECLINED: 422, RATE_LIMIT: 429 };
+const statusCodes = { INVALID_INPUT: 400, UNAUTHORIZED: 401, FORBIDDEN: 403, NOT_FOUND: 404, CONFLICT: 409, INVALID_STATE: 422, MANUAL_REQUIRED: 422, PAYMENT_DECLINED: 422, RATE_LIMIT: 429 };
 export function createApp({ filename = process.env.FOOD_FLOW_DB ?? 'data/food-flow.sqlite', now = () => new Date(), serveStatic = true } = {}) {
   const database = openDatabase(filename);
   const { db, storage, transaction } = database;
   const reservations = createReservationsApi({ storage, now });
   const reception = createReceptionApi({ storage, now });
   const orders = createOrdersApi({ storage });
+  const checkout = createCheckoutApi({ storage, now, recordSettlement(command, settlement) {
+    if (settlement.appliedCreditCents > 0) db.prepare('INSERT INTO check_credits VALUES(?,?,?)').run(command.id, command.reservationId, settlement.appliedCreditCents);
+    db.prepare('INSERT INTO settlements VALUES(?,?,?,?,?)').run(command.id, settlement.reference, settlement.amountCents, settlement.channel, settlement.createdAt);
+  } });
   const app = express();
+  // Habilitar apenas atrás de um proxy confiável, com a porta Node privada.
+  if (process.env.FOOD_FLOW_TRUST_PROXY === '1') app.set('trust proxy', 1);
   app.disable('x-powered-by');
   app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); res.set('X-Content-Type-Options', 'nosniff'); next(); });
   app.use('/api', (req, _res, next) => {
@@ -126,6 +133,10 @@ export function createApp({ filename = process.env.FOOD_FLOW_DB ?? 'data/food-fl
   });
   route('get', '/checks', async req => { roles(req, 'garcom','cozinha','cliente'); const commands = await orders.getCommands(); return req.actor.role === 'cliente' ? commands.filter(c => c.reservationId === req.actor.principal) : commands; });
   route('get', '/checks/:id', req => check(req, req.params.id, 'garcom','cozinha'));
+  route('post', '/checks/:id/payments', async req => {
+    await check(req, req.params.id, 'garcom');
+    return checkout.close(req.params.id, req.body, req.actor);
+  });
   route('post', '/orders', async req => { await check(req, req.body.commandId, 'garcom'); return orders.createOrder(req.body.commandId, req.body.items, req.actor.role === 'cliente' ? 'cliente' : 'garcom', { notes: req.body.notes }); });
   route('patch', '/rounds/:id', async req => {
     if (req.body.status === 'pronto') { roles(req, 'cozinha'); return orders.markRoundReady(req.body.commandId, req.params.id); }

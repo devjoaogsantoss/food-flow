@@ -14,6 +14,7 @@ import {
   describeGuestStatus,
   filterReservations,
 } from '../lib/reception.js';
+import { createUuid } from '../lib/uuid.js';
 
 function fail(code, message) {
   const error = new Error(message);
@@ -399,7 +400,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
         );
       }
       const item = {
-        id: crypto.randomUUID(),
+        id: createUuid(),
         guestName,
         whatsapp,
         email,

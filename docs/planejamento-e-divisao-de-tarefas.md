@@ -1,6 +1,6 @@
 # Planejamento e divisão de tarefas
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+> API Express, SQLite, autenticação e sincronização implementados. Estado e trabalho restante: [pendências atuais](pendencias-atuais.md). Registros de sessões anteriores abaixo são históricos.
 
 > Atualização de 24/11/2026: a divisão de responsabilidades abaixo permanece válida; o estado original é histórico. Consulte [Contrato da reserva e pendências atuais](contrato-reserva.md) para a integração local de reservas/recepção/pedidos, valores aprovados e dependências ainda abertas.
 
@@ -25,8 +25,8 @@ O cronograma de referência é de 22 dias, com disponibilidade estimada de 1–2
 - Existe um protótipo React/Vite em `food-flow/`, com componentes de marca, layout, menu e reservas.
 - A regra de reservas e seus testes existentes ficam em `food-flow/src/lib/reservations.js` e `food-flow/tests/reservations.test.js`.
 - `npm.cmd run build` e `npm.cmd test` foram executados nesta máquina com sucesso.
-- API Node/Express, SQLite, autenticação, permissões e deploy ainda não foram verificados como implementados.
-- A arquitetura, API e banco descritos em `docs/` são propostas até que o código comprove o contrário.
+- API Express, SQLite, autenticação e permissões implementados e cobertos por testes. Deploy não realizado.
+- As missões e cartões abaixo preservam o planejamento original. Consulte [pendências atuais](pendencias-atuais.md) para o estado vigente.
 
 ## Divisão confirmada
 
@@ -190,7 +190,7 @@ Manasses fica com reservas e Matheus com recepção. João mantém cardápio e v
 
 **Primeiros cartões:** servidor saudável; inicialização SQLite; tabela de mesas; tabela de reservas; persistência de item/preço; restrição de duplicidade; teste de reinício.
 
-**Pontos de partida verificados:** `docs/arquitetura.md`, `docs/banco-de-dados.md`, `docs/api.md`; API ainda não está presente no código verificado.
+**Pontos de partida verificados:** `docs/arquitetura.md`, `docs/banco-de-dados.md`, `docs/api.md`; API implementada em `server/`.
 
 ### Dudu — testes e ensaio
 

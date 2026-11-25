@@ -19,8 +19,8 @@ O caso de demonstração cobre terça a sábado, nos serviços de 17h45, 20h00 e
 
 ## Fora do escopo
 
-Estoque, CRM, escalas e white label ficam para evolução. Não há código, publicação, CI ou testes automatizados comprovados no estado atual.
+Estoque, CRM, escalas e white label ficam para evolução. Código, API, SQLite, workflow de CI e testes automatizados existem. Publicação e aceite humano não são presumidos.
 
 ## Entregáveis e pendências
 
-Entregáveis: documentação, jornada demonstrável, aplicação publicada e evidências de validação, conforme implementação futura. Pendem a tolerância de atraso e ausência, o tratamento de consumo abaixo da taxa e a hospedagem com SQLite persistente.
+Aplicação integrada e testes técnicos disponíveis. Atraso e ausência são manuais; consumo inferior ao crédito exige atendimento presencial. Consulte [pendências atuais](pendencias-atuais.md) para trabalho restante e responsáveis.

@@ -1,12 +1,12 @@
 # Arquitetura
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+> API Express, SQLite, autenticação e sincronização implementados. Estado e trabalho restante: [pendências atuais](pendencias-atuais.md). Registros de sessões anteriores abaixo são históricos.
 
-Este documento descreve a arquitetura proposta, não uma implementação existente. [Voltar ao README](../README.md).
+Este documento descreve a arquitetura implementada. [Voltar ao README](../README.md) · [Pendências atuais](pendencias-atuais.md).
 
 ## Visão
 
-React/JavaScript seria a interface; Node.js/Express, a API HTTP; SQLite persistiria dados no servidor. DB Browser seria apenas ferramenta de inspeção local. A hospedagem permanece pendente até comprovar armazenamento persistente.
+React/JavaScript compõe a interface; Node.js/Express fornece a API HTTP; SQLite persiste dados no servidor. DB Browser é uma ferramenta opcional de inspeção local.
 
 ```mermaid
 flowchart LR
@@ -23,4 +23,4 @@ Interface exibe dados e coleta ações; rotas validam entrada e autorização; s
 
 ## Fluxo de dados
 
-Uma ação da interface chega à API, é autorizada, validada e processada em transação quando altera disponibilidade, comanda, crédito ou pagamento. A resposta atualiza a tela. Atualização periódica da API é uma proposta para estados de espera e rodadas.
+Uma ação da interface chega à API, é autorizada, validada e processada em transação. A resposta atualiza a tela. Estados são consultados a cada dois segundos e ao recuperar o foco. Snapshot JSON e projeções relacionais são persistidos na mesma transação.

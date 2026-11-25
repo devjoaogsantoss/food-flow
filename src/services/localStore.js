@@ -144,7 +144,9 @@ export function subscribeState(listener) {
 const queues = new WeakMap();
 export function withStateLock(store, action) {
   if (typeof navigator !== 'undefined' && navigator.locks) {
-    return navigator.locks.request('food-flow-state', action);
+    // O callback assíncrono libera o lock também quando action lança um erro
+    // síncrono (Node 24 pode manter o lock preso com um callback síncrono).
+    return navigator.locks.request('food-flow-state', async () => action());
   }
   // Alternativa serializa apenas este contexto JS, não outras abas.
   const previous = queues.get(store) ?? Promise.resolve();

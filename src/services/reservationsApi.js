@@ -2,6 +2,7 @@ import { remoteEnabled, remoteReservations } from './remoteApi.js';
 import { reservationFees, serviceStart, validateReservationChoice, validateResponsible, localDateString } from '../lib/reservations.js';
 import { buildSeed } from './receptionApi.js';
 import { browserStorage, readState, writeState, withStateLock } from './localStore.js';
+import { createUuid } from '../lib/uuid.js';
 
 function fail(code, message) {
   return Object.assign(new Error(message), { code });
@@ -68,7 +69,7 @@ export function createReservationsApi({ storage, now = () => new Date() } = {}) 
       if (!availability(state, selected).available)
         throw fail('CONFLICT', 'Não há mais vagas. Escolha outra data ou entre na lista de espera.');
       const reservation = {
-        id: 'FF-' + crypto.randomUUID().toUpperCase(), ...selected, ...responsible, partySize,
+        id: 'FF-' + createUuid().toUpperCase(), ...selected, ...responsible, partySize,
         status: 'reservada', createdAt: now().toISOString(),
         payment: { status: 'aprovado', amountCents: reservationFees[selected.tableCategory], simulated: true },
         arrivedAt: null, waitingSince: null, waitingTableId: null,
@@ -107,7 +108,7 @@ export function createReservationsApi({ storage, now = () => new Date() } = {}) 
       if (state.reception.waitlist.some(e => e.date === selected.date && e.service === selected.service &&
           e.whatsapp.replace(/\D/g, '') === responsible.whatsapp.replace(/\D/g, '') && ['aguardando', 'contatado'].includes(e.status)))
         throw fail('CONFLICT', 'Este contato já está na lista deste serviço.');
-      const entry = { id: crypto.randomUUID(), ...selected, ...responsible, status: 'aguardando', createdAt: now().toISOString() };
+      const entry = { id: createUuid(), ...selected, ...responsible, status: 'aguardando', createdAt: now().toISOString() };
       state.reception.waitlist.push(entry);
       writeState(state, store());
       return entry;

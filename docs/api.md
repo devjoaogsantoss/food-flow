@@ -1,38 +1,40 @@
-# API proposta
+﻿# API implementada
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+Base `/api`, Express 5 em `server/app.js`. O modo padrão usa HTTP com Bearer token; perfil e propriedade são verificados no servidor. [Operação](servidor-e-banco.md) · [Pendências atuais](pendencias-atuais.md).
 
-O [contrato da reserva atualizado](contrato-reserva.md) define campos, valores e respostas do adaptador local; os caminhos HTTP abaixo continuam propostos. Consulta individual: GET /reservations/:id, com autorização futura pelo servidor.
-
-Este documento lista contratos mínimos ainda não implementados. [Voltar ao README](../README.md).
-
-| Método e caminho | Papel | Entrada e saída |
+| Método e caminho | Acesso | Finalidade |
 |---|---|---|
-| GET `/menu` | Todos | filtros; cardápio com preços |
-| GET `/services/availability` | Visitante | data/serviço; vagas informativas |
-| POST `/reservations` | Responsável | serviço, categoria, contato; reserva pendente/confirmada |
-| POST `/reservations/:id/cancel` | Responsável | motivo; status e reembolso simulado |
-| POST `/waitlist` | Visitante | nome, categoria, WhatsApp, e-mail; inscrição |
-| POST `/reservations/:id/check-in` | Recepção | confirmação no balcão; check-in idempotente |
-| POST `/reservations/:id/accommodation` | Recepção | mesa; comanda aberta |
-| POST `/orders` | Responsável/Garçom | comanda, itens; rodada criada |
-| PATCH `/rounds/:id` | Cozinha/Garçom | estado; rodada atualizada |
-| GET `/checks/:id` | Responsável/Garçom | —; total, crédito e bloqueios |
-| POST `/checks/:id/payments` | Responsável/Garçom | tipo e valor; pagamento |
-| POST `/checks/:id/calls` | Responsável | tipo; chamada ao salão |
-| POST `/tables/:id/release` | Recepção | —; mesa liberada |
+| POST `/auth/staff`, `/auth/guest` | Público | Autenticar equipe ou responsável |
+| GET `/auth/session`, POST `/auth/logout` | Sessão | Consultar ou revogar sessão |
+| GET `/health`, `/menu`, `/services/availability` | Público | Saúde, catálogo e disponibilidade |
+| POST `/reservations` | Público | Reserva com senha e pagamento simulado |
+| GET `/reservations` | Recepção | Lista de reservas |
+| GET `/reservations/:id`, `/reservations/:id/status` | Dono ou recepção | Consulta individual |
+| POST `/reservations/:id/cancel` | Dono | Cancelar e calcular reembolso simulado |
+| POST `/waitlist` | Público/recepção | Inscrição gratuita |
+| GET `/reception/operations` | Recepção | Espera e bar |
+| PATCH `/waitlist/:id`, PUT `/reception/bar` | Recepção | Atualizar espera e bar |
+| POST `/reservations/:id/check-in`, `/wait`, `/accommodation`, `/departure` | Recepção | Chegada, espera, acomodação e saída |
+| PATCH `/reservations/:id/parking` | Recepção | Corrigir estacionamento antes de fechar |
+| GET `/tables` | Equipe ou cliente | Mesas filtradas por sessão |
+| GET `/checks`, `/checks/:id` | Garçom, cozinha ou dono | Comandas filtradas por sessão |
+| POST `/orders` | Dono ou garçom | Rodada com preço do catálogo |
+| PATCH `/rounds/:id` | Cozinha/garçom | Pronto pela cozinha; entregue pelo garçom |
+| POST `/checks/:id/calls` | Dono | Atendimento ou fechamento presencial |
+| PATCH `/checks/:id/calls/:callId` | Garçom | Atender chamada, sem pagar |
+| PATCH `/checks/:id/tasting` | Dono ou garçom | Preferências de degustação |
+| POST `/tables/:id/release` | Recepção | Liberar após saída e limpeza |
 
-Erros esperados: `400` entrada inválida, `401/403` acesso, `404` inexistente, `409` conflito de disponibilidade/estado e `422` regra de negócio.
+POST `/checks/:id/payments`: dono (digital) ou garçom (presencial). Corpo: `method`, `paymentStatus` (`aprovado`/`recusado`), `expectedTotalCents`, `expectedCreditCents`; aceita `Idempotency-Key`. O servidor recalcula a conta e obtém o canal pela sessão. O resultado é a comanda fechada com `settlement` e referência única. Não confundir chamada presencial com liquidação.
 
-## Concorrência
+Digital: `pix`, `cartao_credito`, ou `credito` quando o saldo é exatamente zero. Presencial: `dinheiro`, `cartao_presencial`, `dividido` (confirmação do total pela equipe), `credito`, ou `sem_consumo`. Crédito excedente exige atendimento e retorna `MANUAL_REQUIRED`, sem liquidação em qualquer canal até decisão da equipe. Sem consumo é encerrado presencialmente com retenção da taxa e sem nova cobrança.
 
-A última mesa é disputada dentro de transação com restrição única. Check-in e comanda repetidos retornam o recurso existente. Nova rodada invalida a liberação da conta até entrega. O crédito da reserva recebe marcação única e o pagamento exige trava/idempotência; digital e presencial concorrentes deixam somente uma liquidação aceita. A verificação deve executar requisições simultâneas, repetir as operações e conferir saldo, estados e número de pagamentos.
+Rodadas ou itens não entregues e estacionamento não informado bloqueiam pagamento. Resumo alterado retorna 409; pagamento recusado retorna 422 sem aplicar crédito. Crédito, liquidação e estado fechado são gravados atomicamente; fechar não libera fisicamente a mesa. Saída e limpeza continuam com a recepção.
 
+## Contratos e concorrência
 
-## Adaptadores de integração (24/11/2026)
+Respostas JSON preservam os contratos dos serviços em `src/services/`. Erros usam `{ code, message }`: 400 entrada, 401/403 acesso, 404 inexistente, 409 conflito, 422 regra e 429 limite de login.
 
-`src/services/httpClient.js` implementa timeout, sessão same-origin, erros HTTP e chave de idempotência opcional, sem retentativa automática de mutações.
-`src/services/httpModules.js` oferece as mesmas operações de reservas, recepção e pedidos. Os caminhos adicionais (consulta de mesas/comandas, espera, estacionamento, saída, bar e chamadas) estão explicitados nesse arquivo e devem ser acordados com Vinicius antes da ativação.
-As respostas JSON devem manter as estruturas retornadas pelos adaptadores locais. Erros usam `{ code, message }`; `204` retorna `null`.
-O servidor deve aplicar autorização por sessão, proteção CSRF nas mutações, vínculo da reserva, transações e idempotência. `source` identifica o canal do pedido, não concede permissão. IDs em URLs são codificados.
-Não ativar os adaptadores antes de implementar sessão real para cliente/equipe e atualização entre dispositivos. A implementação atual continua usando os adaptadores locais.
+Cada operação de negócio usa `BEGIN IMMEDIATE`. Restrições SQL e serialização impedem duplicar vagas e comandas. `Idempotency-Key` permite repetir criação com o mesmo corpo; outro corpo retorna conflito. O navegador não repete mutações automaticamente.
+
+Não há CORS aberto nem autenticação por cookie; mutações usam JSON e chamadas declaradas cross-site são recusadas. Adaptadores HTTP estão ativos por padrão; `dev:local` é o modo demonstrativo explícito.

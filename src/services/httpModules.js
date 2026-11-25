@@ -3,6 +3,9 @@
 export function createHttpModules(request) {
   const id = (value) => encodeURIComponent(String(value));
   return {
+    checkout: {
+      close: (commandId, body, idempotencyKey) => request('POST', `/checks/${id(commandId)}/payments`, { body, idempotencyKey }),
+    },
     reservations: {
       getAvailability: (query) => request('GET', '/services/availability', { query }),
       confirm: (body, idempotencyKey) => request('POST', '/reservations', { body, idempotencyKey }),

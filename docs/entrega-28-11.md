@@ -1,6 +1,6 @@
 # Entrega de 28/11/2026
 
-> Atualização de 24/11/2026: API, SQLite, autorização e sincronização entre dispositivos implementados. Consulte [servidor e banco compartilhado](servidor-e-banco.md). Menções abaixo à API ausente e ao armazenamento exclusivamente local descrevem etapas anteriores. Pagamento/fechamento de Israel continuam pendentes.
+> API Express, SQLite, autenticação e sincronização implementados. Estado e trabalho restante: [pendências atuais](pendencias-atuais.md). Registros de sessões anteriores abaixo são históricos.
 
 Prazo confirmado pelo usuário em 24/11/2026. Manasses já aceitou a colaboração no GitHub.
 Implementação assistida por Codex na branch `feat/pendencias-equipe-28-11`; revisão humana não presumida.
