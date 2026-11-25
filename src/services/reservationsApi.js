@@ -70,6 +70,7 @@ export function createReservationsApi({ storage, now = () => new Date() } = {}) 
         throw fail('CONFLICT', 'Não há mais vagas. Escolha outra data ou entre na lista de espera.');
       const reservation = {
         id: 'FF-' + createUuid().toUpperCase(), ...selected, ...responsible, partySize,
+        customerId: typeof input.customerId === 'string' ? input.customerId : null,
         status: 'reservada', createdAt: now().toISOString(),
         payment: { status: 'aprovado', amountCents: reservationFees[selected.tableCategory], simulated: true },
         arrivedAt: null, waitingSince: null, waitingTableId: null,

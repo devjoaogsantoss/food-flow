@@ -25,7 +25,7 @@ let browserConnection;
 const connections = [];
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function until(action, label) {
-  for (let attempt = 0; attempt < 100; attempt++) {
+  for (let attempt = 0; attempt < 300; attempt++) {
     try {
       const value = await action();
       if (value) return value;
@@ -160,11 +160,13 @@ try {
       );
     }
   };
-  const click = (tab, selector) =>
-    evaluate(
+  const click = async (tab, selector) => {
+    await until(()=>evaluate(tab, `Boolean(document.querySelector(${JSON.stringify(selector)}))`), 'elemento: '+selector);
+    return evaluate(
       tab,
-      `document.querySelector(${JSON.stringify(selector)}).click()`,
+      `(()=>{const element=document.querySelector(${JSON.stringify(selector)});element.focus();element.click();})()`,
     );
+  };
   async function fill(tab, selector, value) {
     await evaluate(
       tab,
@@ -182,85 +184,8 @@ try {
     await fill(tab, '#staff-password', PASSWORD);
     await click(tab, '.staff-login button');
   }
-  const home = await tab('/');
-  await text(home, 'Planeje seu próximo encontro.');
-  const date = await evaluate(home, `(() => { const d=new Date();d.setDate(d.getDate()+7);while([0,1].includes(d.getDay()))d.setDate(d.getDate()+1);return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');})()`);
-  await fill(home,'#visit-date',date);
-  await click(home,'.reservas form button');
-  await text(home,'Nome completo');
-  await fill(home,'[name="guestName"]','Cliente API Browser');
-  await fill(home,'[name="whatsapp"]','11999998888');
-  await fill(home,'[name="email"]','api-browser@example.test');
-  await fill(home,'[name="password"]',PASSWORD);
-  await click(home,'.reservas form button:not([type="button"])');
-  await text(home,'Simular aprovação');
-  await evaluate(home,`Array.from(document.querySelectorAll('button')).find(b=>b.textContent==='Simular aprovação').click()`);
-  await text(home,'Código:');
-  const code=await evaluate(home,`document.querySelector('.reservas-code strong').textContent`);
-  const reception=await tab('/recepcao');
-  await login(reception,'15152018');
-  await until(()=>evaluate(reception,`Boolean(document.querySelector('#rc-date'))`),'filtro de data');
-  await fill(reception,'#rc-date',date);
-  await text(reception,'Cliente API Browser');
-  await fill(reception,'#parking-'+code,'nao');
-  await click(reception,'.rc-card .rc-btn');
-  await text(reception,'Selecione a mesa');
-  await fill(reception,'#table-'+code,'1');
-  await until(()=>evaluate(reception,`Array.from(document.querySelectorAll('button')).some(b=>b.textContent==='Confirmar acomodação')`),'acomodação');
-  await evaluate(reception,`Array.from(document.querySelectorAll('button')).find(b=>b.textContent==='Confirmar acomodação').click()`);
-  const waiter=await tab('/pedidos');
-  await login(waiter,'01510041');
-  await text(waiter,'Comanda #101');
-  await click(waiter,'.table-card');
-  await text(waiter,'Anotar pedido da mesa');
-  await click(waiter,'.menu-path:first-child');
-  await until(()=>evaluate(waiter,`Boolean(document.querySelector('#qty-PRI001'))`),'catálogo do garçom');
-  await fill(waiter,'#qty-PRI001','1');
-  await evaluate(waiter,`document.querySelector('#qty-PRI001').closest('form').querySelector('button').click()`);
-  await click(waiter,'.order-draft button[type="submit"]');
-  await text(waiter,'Rodada 1');
-  const kitchen=await tab('/cozinha');
-  await login(kitchen,'00589510');
-  await text(kitchen,'Mesa 1 · Rodada 1');
-  await click(kitchen,'.round-card button');
-  await text(waiter,'Pronto para servir');
-  await click(waiter,'.deliver-button');
-  await text(kitchen,'Nenhuma rodada aguardando preparo.');
-  const guest=await tab('/minha-reserva');
-  await text(guest,'Acompanhe sua reserva');
-  await fill(guest,'#rc-code',code);
-  await fill(guest,'input[type="password"]',PASSWORD);
-  await click(guest,'button[type="submit"]');
-  await text(guest,'Abrir minha comanda');
-  await click(guest,'a.rc-btn');
-  await text(guest,'Comanda #101');
-  await text(guest,'Todos os itens foram entregues');
-  for(const connection of [home,reception,waiter,kitchen,guest]) {
-    assert.equal(await evaluate(connection,`localStorage.getItem('food-flow-state-v1')`),null,'sem banco local');
-    assert.equal(connection.errors.length,0,'sem exceções JavaScript');
-  }
-  const layouts=[];
-  for(const [page,connection] of [['recepcao',reception],['garcom',waiter],['cozinha',kitchen],['cliente',guest]]) {
-    for(const width of [390,1024,1440]) {
-      await connection.call('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<600});
-      await delay(100);
-      const overflow=await evaluate(connection,'document.documentElement.scrollWidth > window.innerWidth');
-      assert.equal(overflow,false,page+' '+width);
-      layouts.push({page,width,overflow});
-    }
-  }
-  await fill(guest,'[aria-label="Fechamento da comanda"] select','pix');
-  await evaluate(guest, `Array.from(document.querySelectorAll('button')).find(b=>b.textContent==='Simular pagamento aprovado e fechar').click()`);
-  await text(guest,'Comanda quitada');
-  assert.equal(await evaluate(guest, `Boolean(document.querySelector('.order-composer'))`),false,'sem formulário de novo pedido após fechar');
-  await evaluate(reception, `Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Registrar saída após fechamento').click()`);
-  await text(reception,'Saída registrada');
-  await until(()=>evaluate(reception, `Boolean(document.querySelector('.rc-table-aguardando_limpeza button'))`),'mesa aguardando limpeza');
-  await click(reception,'.rc-table-aguardando_limpeza button');
-  await until(()=>evaluate(reception, `document.querySelector('.rc-table-list li').classList.contains('rc-table-pronta')`),'mesa liberada após limpeza');
-  const completed = await api.transaction(() => api.db.prepare('SELECT count(*) n FROM settlements').get().n);
-  assert.equal(completed,1,'uma liquidação no banco');
-  console.log(JSON.stringify({passed:true,isolatedContexts:5,scenarios:['reserva com senha','recepção → garçom → cozinha em contextos isolados','preparo e entrega sincronizados por HTTP','cliente autentica em outro dispositivo','sem estado de negócio em localStorage','pagamento simulado → saída → limpeza → mesa pronta'],layouts},null,2));
+  const {runProductFlow}=await import('./browser-product-flow.mjs');
+  await runProductFlow({tab,text,fill,click,evaluate,until,api,profile,base,login});
 } finally {
   if (browserConnection)
     await browserConnection.call('Browser.close').catch(() => {});

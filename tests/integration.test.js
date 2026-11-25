@@ -30,9 +30,13 @@ test('preserva /pedidos e aceita novas rotas, barras finais e hashes antigos', (
   assert.equal(resolvePage('/', '#reservas'), 'home');
   assert.equal(resolvePage('/pedidos/', '#recepcao'), 'orders');
   assert.equal(resolvePage('/recepcao/'), 'reception');
-  assert.equal(resolvePage('/minha-reserva'), 'guest');
+  assert.equal(resolvePage('/minha-reserva'), 'client');
   assert.equal(resolvePage('/', '#recepcao'), 'reception');
-  assert.equal(resolvePage('/', '#minha-reserva'), 'guest');
+  assert.equal(resolvePage('/', '#minha-reserva'), 'client');
+  assert.equal(resolvePage('/cliente/conta'), 'client');
+  assert.equal(resolvePage('/cliente/reservar'), 'booking');
+  assert.equal(resolvePage('/admin/salao'), 'waiter');
+  assert.equal(resolvePage('/admin/recepcao'), 'reception');
 });
 
 test('ambos os canais pedem na comanda acomodada e sobrevivem à recriação das APIs', async () => {

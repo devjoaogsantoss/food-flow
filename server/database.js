@@ -15,7 +15,8 @@ export function openDatabase(filename) {
     CREATE TABLE IF NOT EXISTS migrations(version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS app_state(id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL CHECK(json_valid(value)));
     CREATE TABLE IF NOT EXISTS tables(id INTEGER PRIMARY KEY, capacity INTEGER NOT NULL CHECK(capacity IN (2,4,8)), status TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS reservations(id TEXT PRIMARY KEY, date TEXT NOT NULL, service TEXT NOT NULL, category INTEGER NOT NULL CHECK(category IN (2,4,8)), slot INTEGER, status TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(date,service,category,slot));
+    CREATE TABLE IF NOT EXISTS customers(id TEXT PRIMARY KEY, email TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, first_name TEXT NOT NULL, last_name TEXT NOT NULL, age INTEGER NOT NULL, cpf TEXT NOT NULL UNIQUE, phone TEXT NOT NULL, created_at TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS reservations(id TEXT PRIMARY KEY, date TEXT NOT NULL, service TEXT NOT NULL, category INTEGER NOT NULL CHECK(category IN (2,4,8)), slot INTEGER, status TEXT NOT NULL, data TEXT NOT NULL, customer_id TEXT REFERENCES customers(id), UNIQUE(date,service,category,slot));
     CREATE TRIGGER IF NOT EXISTS reservation_capacity BEFORE INSERT ON reservations WHEN NEW.slot IS NOT NULL
       BEGIN SELECT CASE WHEN NEW.slot < 1 OR NEW.slot > (SELECT count(*) FROM tables WHERE capacity=NEW.category)
         THEN RAISE(ABORT,'reservation capacity exceeded') END; END;
@@ -37,6 +38,9 @@ export function openDatabase(filename) {
     CREATE TABLE IF NOT EXISTS settlements(command_id INTEGER PRIMARY KEY REFERENCES commands(id) DEFERRABLE INITIALLY DEFERRED, reference TEXT NOT NULL UNIQUE, amount_cents INTEGER NOT NULL CHECK(amount_cents>=0), channel TEXT NOT NULL, created_at TEXT NOT NULL);
     INSERT OR IGNORE INTO migrations VALUES(1,datetime('now'));
   `);
+  if (!db.prepare('PRAGMA table_info(reservations)').all().some(column => column.name === 'customer_id'))
+    db.exec('ALTER TABLE reservations ADD COLUMN customer_id TEXT REFERENCES customers(id)');
+  db.exec("INSERT OR IGNORE INTO migrations VALUES(2,datetime('now'))");
   function project(state) {
     db.exec('DELETE FROM calls; DELETE FROM items; DELETE FROM rounds; DELETE FROM commands; DELETE FROM reservation_payments; DELETE FROM reservations; DELETE FROM waitlist; DELETE FROM tables;');
     const insert = (table, values) => db.prepare(`INSERT INTO ${table} VALUES(${values.map(() => '?').join(',')})`).run(...values);
@@ -46,7 +50,7 @@ export function openDatabase(filename) {
       const group = `${reservation.date}/${reservation.service}/${reservation.tableCategory}`;
       const slot = reservation.status === 'cancelada' ? null : (slots.get(group) ?? 0) + 1;
       if (slot !== null) slots.set(group, slot);
-      insert('reservations', [reservation.id, reservation.date, reservation.service, reservation.tableCategory, slot, reservation.status, JSON.stringify(reservation)]);
+      db.prepare('INSERT INTO reservations (id,date,service,category,slot,status,data,customer_id) VALUES(?,?,?,?,?,?,?,?)').run(reservation.id, reservation.date, reservation.service, reservation.tableCategory, slot, reservation.status, JSON.stringify(reservation), reservation.customerId ?? null);
       if (reservation.payment) insert('reservation_payments', [reservation.id, reservation.payment.amountCents, JSON.stringify(reservation.payment)]);
     }
     for (const command of state.orders.commands) {

@@ -2,25 +2,17 @@
 import { SectionHeading } from './Layout.jsx';
 import { localDateString, serviceTimes, tableCategories, reservationFees, validateResponsible } from '../lib/reservations.js';
 import { reservationsApi as api } from '../services/reservationsApi.js';
-import { subscribeState } from '../services/localStore.js';
-import { remoteEnabled, loginGuest } from '../services/remoteApi.js';
+import { remoteEnabled } from '../services/remoteApi.js';
 import { money } from '../lib/menu.js';
 import '../styles/reservations.css';
 
-const LAST = 'food-flow-last-reservation';
-function remember(code) {
-  try { if (code) localStorage.setItem(LAST, code); else localStorage.removeItem(LAST); } catch { /* registro principal já salvo */ }
-}
 const dateLabel = value => value.split('-').reverse().join('/');
-export default function Reservations() {
+export default function Reservations({ initialCode } = {}) {
   const [choice, setChoice] = useState({ date: '', service: serviceTimes[0], tableCategory: 2 });
   const [contact, setContact] = useState({ guestName: '', whatsapp: '', email: '', partySize: 2 });
   const [step, setStep] = useState('escolha');
   const [availability, setAvailability] = useState(null);
   const [reservation, setReservation] = useState(null);
-  const [code, setCode] = useState('');
-  const [password, setPassword] = useState('');
-  const [lookupPassword, setLookupPassword] = useState('');
   const inFlight = useRef(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -28,22 +20,11 @@ export default function Reservations() {
   const [confirmCancel, setConfirmCancel] = useState(false);
   useEffect(() => {
     let active = true;
-    async function restore() {
-      let saved;
-      try { saved = localStorage.getItem(LAST); } catch { return; }
-      if (!saved) return;
-      try {
-        const found = await api.getReservation(saved);
-        if (active) { setReservation(found); setStep('resumo'); }
-      } catch (failure) {
-        if (failure.code === 'NOT_FOUND') remember(null);
-        else if (active) setError(failure.message);
-      }
-    }
-    restore();
-    const off = subscribeState(restore);
-    return () => { active = false; off(); };
-  }, []);
+    if (initialCode) api.getReservation(initialCode).then(found => {
+      if (active) { setReservation(found); setStep('resumo'); }
+    }).catch(failure => { if (active) setError(failure.message); });
+    return () => { active = false; };
+  }, [initialCode]);
   async function run(action) {
     if (inFlight.current) return;
     inFlight.current = true;
@@ -66,8 +47,8 @@ export default function Reservations() {
   async function pay(status) {
     await run(async () => {
       try {
-        const saved = await api.confirm({ ...choice, ...contact, ...(remoteEnabled ? { password } : {}), paymentStatus: status });
-        remember(saved.id); setReservation(saved); setStep('resumo');
+        const saved = await api.confirm({ ...choice, ...contact, paymentStatus: status });
+        setReservation(saved); setStep('resumo');
       } catch (failure) {
         if (failure.code === 'CONFLICT') { setStep('escolha'); setAvailability(await api.getAvailability(choice)); }
         throw failure;
@@ -75,26 +56,24 @@ export default function Reservations() {
     });
   }
   function reset() {
-    remember(null); setReservation(null); setStep('escolha'); setAvailability(null);
+    setReservation(null); setStep('escolha'); setAvailability(null);
     setContact({ guestName: '', whatsapp: '', email: '', partySize: Number(choice.tableCategory) });
     setError(''); setNotice(''); setConfirmCancel(false);
   }
-  const waiting = step === 'espera';
   return (
     <section id="reservas" className="reservation-section section">
       <div className="container reservation-grid">
         <div>
-          <SectionHeading eyebrow="UM LUGAR À SUA ESPERA" title="Planeje seu próximo encontro.">
+          <SectionHeading eyebrow="RESERVA" title="Valores e condições">
             De terça a sábado, às 17h45, 20h00 e 22h15.
           </SectionHeading>
-          <p>Reserve uma mesa para 2, 4 ou 8 pessoas. A confirmação depende de disponibilidade e pagamento simulado aprovado.</p>
-          <p>Taxa por mesa: 2 lugares · R$ 50; 4 lugares · R$ 100; 8 lugares · R$ 200.</p>
-          <p>Cancelamentos com pelo menos 12 horas de antecedência permitem reembolso simulado.</p>
-          <p className="small-note">{remoteEnabled ? 'Reserva salva no servidor. Guarde o código e a senha para consultar em outro dispositivo. Pagamento simulado, sem cobrança real.' : 'Demonstração salva neste navegador. Não há cobrança real. Use dados fictícios.'}</p>
-          <a href="/minha-reserva">Acompanhar chegada e acomodação</a>
+          <p>O valor da reserva depende do tamanho da mesa e vira crédito para consumo: 2 lugares · R$ 50; 4 lugares · R$ 100; 8 lugares · R$ 200.</p>
+          <p>Cancelamentos feitos com pelo menos 12 horas de antecedência têm reembolso simulado.</p>
+          <p className="small-note">{remoteEnabled ? 'Guarde o código completo para consultar a reserva em outro dispositivo. A confirmação de pagamento é simulada, sem cobrança.' : 'Demonstração neste navegador, sem cobrança. Use dados fictícios.'}</p>
+          <a href="/minha-reserva">Já reservou? Acompanhe sua visita</a>
         </div>
         <div className="reservation-form reservas">
-          <h3>Sua visita ao Santo Garfo</h3>
+          <h3>Dados da reserva</h3>
           {error && <p className="reservas-error" role="alert">{error}</p>}
           {notice && <p role="status">{notice}</p>}
           {step === 'escolha' && <>
@@ -105,39 +84,30 @@ export default function Reservations() {
               <select id="reservation-service" value={choice.service} onChange={e => update('service', e.target.value)}>
                 {serviceTimes.map(time => <option key={time}>{time}</option>)}
               </select>
-              <label htmlFor="table-category">Categoria de mesa</label>
-              <select id="table-category" value={choice.tableCategory} onChange={e => update('tableCategory', Number(e.target.value))}>
-                {tableCategories.map(size => <option key={size} value={size}>Mesa para {size} pessoas · {money(reservationFees[size])}</option>)}
+              <label htmlFor="reservation-party-size">Quantidade de pessoas</label>
+              <select id="reservation-party-size" value={contact.partySize} onChange={event => { const size=Number(event.target.value); setContact(current=>({...current,partySize:size})); setChoice(current=>({...current,tableCategory:tableCategories.find(capacity=>capacity>=size)})); setAvailability(null); }}>
+                {Array.from({length:8},(_,i)=>i+1).map(size => <option key={size} value={size}>{size} {size===1?'pessoa':'pessoas'}</option>)}
               </select>
+              <p className="small-note">Mesa de {choice.tableCategory} lugares · reserva de {money(reservationFees[choice.tableCategory])}, convertida em crédito.</p>
               <button className="button" disabled={busy}>{busy ? 'Consultando…' : 'Ver disponibilidade'}</button>
             </form>
             {availability && !availability.available && <div role="status">
               <p>Não há vagas neste serviço e categoria.</p>
               <div className="reservas-actions">{availability.suggestions.map(date => <button key={date} type="button" disabled={busy} onClick={() => { const next = { ...choice, date }; setChoice(next); check(next); }}>{dateLabel(date)}</button>)}</div>
-              <button type="button" disabled={busy} onClick={() => setStep('espera')}>Entrar na lista de espera gratuita</button>
-              <p>A lista não reserva mesa nem garante vaga.</p>
+              <p>Escolha outro horário, data ou categoria de mesa.</p>
             </div>}
-            <form className="reservas-lookup" onSubmit={e => { e.preventDefault(); run(async () => { if (remoteEnabled) await loginGuest(code, lookupPassword); const found = await api.getReservation(code); remember(found.id); setReservation(found); setStep('resumo'); }); }}>
-              <label htmlFor="reservation-code">Já tem reserva? Consulte pelo código</label>
-              <input id="reservation-code" required value={code} onChange={e => setCode(e.target.value)} />
-              {remoteEnabled && <label>Senha da reserva<input type="password" autoComplete="current-password" value={lookupPassword} onChange={e => setLookupPassword(e.target.value)} /></label>}
-              <button disabled={busy}>Consultar reserva</button>
-            </form>
           </>}
-          {['dados', 'espera'].includes(step) && <form onSubmit={e => {
+          {step === 'dados' && <form onSubmit={e => {
             e.preventDefault();
             const invalid = validateResponsible(contact);
             if (invalid) { setError(invalid); return; }
-            if (!waiting) { setError(''); setStep('pagamento'); }
-            else run(async () => { await api.joinWaitlist({ ...choice, ...contact }); setStep('escolha'); setNotice('Inscrição registrada. A recepção poderá entrar em contato. Não há cobrança nem garantia de vaga.'); });
+            setError(''); setStep('pagamento');
           }}>
             <p>{dateLabel(choice.date)} · {choice.service} · Mesa de {choice.tableCategory} lugares</p>
-            {waiting && <h4>Lista de espera gratuita</h4>}
             {[['guestName', 'Nome completo', 'text'], ['whatsapp', 'WhatsApp', 'tel'], ['email', 'E-mail', 'email']].map(([field, label, type]) =>
               <label key={field}>{label}<input name={field} type={type} required value={contact[field]} onChange={e => setContact(current => ({ ...current, [field]: e.target.value }))} /></label>)}
-            {!waiting && remoteEnabled && <label>Crie uma senha para consultar a reserva<input name="password" type="password" autoComplete="new-password" required minLength={10} maxLength={128} value={password} onChange={e => setPassword(e.target.value)} /></label>}
-            {!waiting && <label>Quantidade de pessoas<input name="partySize" type="number" min="1" max={choice.tableCategory} required value={contact.partySize} onChange={e => setContact(current => ({ ...current, partySize: Number(e.target.value) }))} /></label>}
-            <div className="reservas-actions"><button type="button" disabled={busy} onClick={() => { setStep('escolha'); setError(''); }}>Voltar</button><button disabled={busy}>{waiting ? 'Confirmar inscrição gratuita' : 'Continuar para pagamento'}</button></div>
+            <p>{contact.partySize} pessoas. Para alterar o grupo, volte à escolha da reserva.</p>
+            <div className="reservas-actions"><button type="button" disabled={busy} onClick={() => { setStep('escolha'); setError(''); }}>Voltar</button><button disabled={busy}>Continuar para pagamento</button></div>
           </form>}
           {step === 'pagamento' && <>
             <p>{dateLabel(choice.date)} · {choice.service} · {contact.partySize} pessoas · Mesa de {choice.tableCategory} lugares</p>

@@ -18,7 +18,27 @@ Cada card mostra foto clicável, categoria/subcategoria, nome, porção, peso ap
 
 Esses códigos DEG identificam os três pacotes na aplicação; não estavam na planilha. Preços dos pacotes são os informados nos títulos, sem recalcular pela soma dos componentes. Os mesmos códigos de componentes podem ter nomes, porções ou preços diferentes nas seções: ENT001 é ostra no à la carte/Mar e bruschetta no Terra. Cada seção é preservada separadamente. A definição anterior de degustação única de R$ 239,90 foi atualizada conforme a nova instrução do usuário.
 
-Cada pacote tem entrada, principal e sobremesa, mais uma escolha de bebida por pessoa. A bebida e o horário opcional são registrados por grupo; para escolhas distintas, adicionar grupos separados. A quantidade acumulada de pessoas em degustação não pode superar `partySize` da reserva. A mesa pode combinar os caminhos.
+Cada pacote tem entrada, principal e sobremesa, mais uma escolha de bebida por pessoa. O momento da bebida tem três opções: “Servir junto com a entrada”, “Servir com o prato principal” e “Sugestão da casa”. A escolha é registrada por grupo; para escolhas distintas, adicionar grupos separados. Horários antigos continuam legíveis para preservar pedidos existentes. A quantidade acumulada de pessoas em degustação não pode superar `partySize` da reserva. A mesa pode combinar os caminhos.
+
+## Experiência e operação visual — 25/11/2026
+
+A navegação atual tem duas experiências distintas. Consulte [telas e passagem de responsabilidades](experiencias-produto.md).
+
+- A recepção define uma mesa pronta em uma janela com ícones; o salão confirma a acomodação antes da abertura da comanda. Lista de espera e registro de novas esperas estão desativados nesta versão; registros históricos são preservados.
+- Mesas e 20 lugares individuais do bar compartilham o mapa. A ocupação de cada lugar persiste; o bar continua sendo um controle informativo, sem comanda própria.
+- Acomodados aparecem em cartões compactos, oito por página, com filtros por andamento. “Realizando pedido” significa acomodado sem pedido enviado; não monitora digitação do cliente. “Aguardando garçom” indica chamada pendente e “Aguardando entrega” indica rodada pronta.
+- Garçom escolhe a mesa e alterna entre Atendimento e entregas, Novo pedido e Conta e pagamento. Fechamento e formulário de pedido ficam em tarefas separadas.
+- Cliente vê logo, título “Realize seu pedido”, informações de reserva/comanda e timeline horizontal até a saída.
+- Itens enviados são resumidos por imagem, quantidade, nome e preço; o clique abre descrição/composição e preferência da bebida.
+- Cozinha organiza a fila em Recebidos, Em preparo e Prontos para servir, filtrada por mesa. O mapa de ocupação física pertence à recepção.
+- A cozinha inicia o preparo e marca pronto; o garçom confirma entrega. A API bloqueia entrega antes de a cozinha sinalizar pronto.
+- Cada rodada apresenta timeline horizontal de envio, preparo, espera pelo garçom e entrega. A visão do cliente pode ser aberta pelos detalhes da mesa acomodada na recepção.
+
+## Dados após o fechamento
+
+Fechar não exclui nem transfere dados: reserva, contato do responsável, comanda, itens, rodadas, chamadas e liquidação permanecem no SQLite configurado por `FOOD_FLOW_DB` (localmente, `data/food-flow.sqlite`). A saída encerra a visita e encaminha a mesa à limpeza; depois ela pode ser marcada pronta. Isso não apaga o histórico.
+
+O responsável pode consultar usando o código UUID completo da reserva, que funciona como credencial de acesso àquela visita, sem exigir cadastro. Opcionalmente, pode criar conta com senha protegida por hash para reunir reservas no histórico e vincular reservas anteriores informando seus códigos. Comandas e pedidos continuam ligados ao código da reserva. Contas da equipe mantêm matrícula e senha. Códigos curtos demonstrativos não autenticam na API. Senhas antigas não são consultadas, e os registros históricos permanecem preservados. Ainda não existe painel de CRM/relatórios, envio a outro sistema ou política automática de retenção/exclusão dos dados de atendimento. Backup consistente é uma operação separada; proteger e definir a retenção do banco continua sendo responsabilidade da equipe.
 
 ## Cálculo
 
@@ -42,7 +62,7 @@ Funcionários entram por `/equipe`. Matrículas são strings para preservar zero
 | Matrícula | Tela | Funcionalidades |
 |---|---|---|
 | 01510041 | Garçom — `/pedidos` | Mesas/comandas, anotar pedidos dos dois caminhos, observações, atender chamadas e confirmar entregas |
-| 15152018 | Recepção — `/recepcao` | Chegada, estacionamento, espera, acomodação, mesas, lista de espera e bar |
+| 15152018 | Recepção — `/recepcao` | Chegada, estacionamento, acomodação, status das mesas, saída, limpeza e bar |
 | 00589510 | Cozinha — `/cozinha` | Fila por mesa/rodada, composição e bebida do menu, observações, indicar pronto para servir |
 
 Não existe seletor livre de perfil. Uma matrícula direciona à área correspondente; tentar outra área mostra a restrição de interface. A sessão demonstrativa fica em `sessionStorage`, separada por aba. Essa organização não substitui autenticação, vínculo do responsável e autorização na futura API.

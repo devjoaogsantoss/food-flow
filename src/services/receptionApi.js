@@ -315,7 +315,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       if (reservation.status === 'reservada') {
         throw fail('INVALID_STATE', 'Registre a chegada antes de acomodar.');
       }
-      if (!['chegou', 'em_espera'].includes(reservation.status)) {
+      if (!['chegou', 'em_espera', 'mesa_definida'].includes(reservation.status)) {
         throw fail(
           'INVALID_STATE',
           'A reserva não está aguardando acomodação.',
@@ -329,7 +329,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
           `Esta reserva é para mesa de ${reservation.tableCategory} lugares.`,
         );
       }
-      if (table.status !== 'pronta') {
+      if (table.status !== 'pronta' && !(table.status === 'designada' && table.assignedReservationId === reservation.id)) {
         throw fail('INVALID_STATE', 'A mesa ainda não está pronta.');
       }
 
@@ -338,6 +338,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       const { command } = openCommand(orders, reservation, table);
 
       table.status = 'ocupada';
+      delete table.assignedReservationId;
       reservation.status = 'acomodada';
       reservation.seatedAt = now().toISOString();
       reservation.tableId = table.id;
@@ -350,9 +351,61 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       return { reservation, command, changed: true };
     },
 
+    async assignTable(reservationId, tableId, role) {
+      assertReception(role);
+      const data = read();
+      const reservation = findReservation(data, reservationId);
+      const table = findTable(data, tableId);
+      if (!['chegou', 'em_espera', 'mesa_definida'].includes(reservation.status)) throw fail('INVALID_STATE', 'Registre a chegada antes de definir a mesa.');
+      if (table.capacity !== reservation.tableCategory) throw fail('INVALID_STATE', 'Selecione uma mesa da categoria reservada.');
+      if (reservation.assignedTableId === table.id && table.assignedReservationId === reservation.id) return { changed: false, reservation };
+      if (table.status !== 'pronta') throw fail('CONFLICT', 'A mesa não está disponível para acomodação.');
+      const previous = data.tables.find(item => item.id === reservation.assignedTableId && item.assignedReservationId === reservation.id);
+      if (previous) { previous.status = 'pronta'; delete previous.assignedReservationId; }
+      table.status = 'designada'; table.assignedReservationId = reservation.id;
+      reservation.status = 'mesa_definida'; reservation.assignedTableId = table.id;
+      write(data);
+      return { changed: true, reservation };
+    },
+
+    async getFloor() {
+      const data = read();
+      return { tables: data.tables, arrivals: data.reservations.filter(item => item.status === 'mesa_definida').map(({ id, guestName, assignedTableId, partySize, date, service }) => ({ id, guestName, assignedTableId, partySize, date, service })) };
+    },
+
+    async confirmAssignedSeating(reservationId, role) {
+      if (role !== 'garcom') throw fail('FORBIDDEN', 'O garçom ou metre confirma a acomodação.');
+      const reservation = findReservation(read(), reservationId);
+      if (!reservation.assignedTableId) throw fail('INVALID_STATE', 'A recepção precisa definir uma mesa antes da acomodação.');
+      return api.confirmSeating(reservationId, reservation.assignedTableId, 'recepcao');
+    },
+
+    async markFloorTableReady(tableId, role) {
+      if (role !== 'garcom') throw fail('FORBIDDEN', 'O salão confirma a limpeza da mesa.');
+      return api.markTableReady(tableId, 'recepcao');
+    },
+
     async getOperations() {
       const data = read();
-      return { waitlist: data.waitlist, barOccupancy: data.barOccupancy };
+      return { waitlist: data.waitlist, barOccupancy: data.barOccupancy, barSeats: data.barSeats ?? Array.from({ length: data.barOccupancy }, (_, i) => i + 1) };
+    },
+
+    async getProgress() {
+      return readOrders().commands;
+    },
+
+    async setBarSeat(value, occupied, role) {
+      assertReception(role);
+      const id = Number(value);
+      if (!Number.isInteger(id) || id < 1 || id > 20 || typeof occupied !== 'boolean') throw fail('INVALID_INPUT', 'Informe um lugar de 1 a 20 e sua ocupação.');
+      const data = read();
+      const seats = new Set(data.barSeats ?? Array.from({ length: data.barOccupancy }, (_, i) => i + 1));
+      const changed = seats.has(id) !== occupied;
+      if (occupied) seats.add(id); else seats.delete(id);
+      data.barSeats = [...seats].sort((a, b) => a - b);
+      data.barOccupancy = data.barSeats.length;
+      write(data);
+      return { changed };
     },
 
     async setBarOccupancy(value, role) {
@@ -363,6 +416,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
       }
       const data = read();
       data.barOccupancy = count;
+      data.barSeats = Array.from({ length: count }, (_, i) => i + 1);
       write(data);
       return { changed: true };
     },
@@ -492,6 +546,7 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
         status: reservation.status,
         tableCategory: reservation.tableCategory,
         partySize: reservation.partySize,
+        assignedTableId: reservation.assignedTableId,
         commandId: reservation.commandId,
         table: table ? { number: table.number } : null,
         ...describeGuestStatus(reservation, table),
@@ -517,6 +572,10 @@ export function createReceptionApi({ storage, now = () => new Date() } = {}) {
     'registerWait',
     'markTableReady',
     'confirmSeating',
+    'assignTable',
+    'confirmAssignedSeating',
+    'markFloorTableReady',
+    'setBarSeat',
     'setBarOccupancy',
     'registerDeparture',
     'addWaitlistEntry',

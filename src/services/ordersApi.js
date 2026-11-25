@@ -133,6 +133,7 @@ export function createOrdersApi({ storage } = {}) {
       };
 
       command.rounds.push(round);
+      delete command.diningAt;
 
       saveData(data);
 
@@ -178,6 +179,25 @@ export function createOrdersApi({ storage } = {}) {
       saveData(data);
     },
 
+    async markRoundStarted(commandId, roundId) {
+      const data = readData();
+      const command = data.commands.find(item => item.id === Number(commandId));
+      const round = command?.rounds.find(item => item.id === roundId);
+      if (!round || command.status !== 'aberta' || round.status === 'entregue' || round.readyAt) throw new Error('Esta rodada não pode iniciar preparo.');
+      round.startedAt ??= new Date().toISOString();
+      saveData(data);
+      return round;
+    },
+
+    async markDining(commandId) {
+      const data = readData();
+      const command = data.commands.find(item => item.id === Number(commandId));
+      if (!command || command.status !== 'aberta' || !command.rounds.length || command.rounds.some(round => round.status !== 'entregue')) throw new Error('Confirme todas as entregas antes de indicar que o cliente está em refeição.');
+      command.diningAt ??= new Date().toISOString();
+      saveData(data);
+      return command;
+    },
+
     async markRoundReady(commandId, roundId) {
       const data = readData();
       const command = data.commands.find(
@@ -189,6 +209,7 @@ export function createOrdersApi({ storage } = {}) {
       if (round.status === 'entregue')
         throw new Error('Esta rodada já foi entregue.');
       round.readyAt ??= new Date().toISOString();
+      round.startedAt ??= round.readyAt;
       saveData(data);
     },
 
@@ -253,6 +274,8 @@ export function createOrdersApi({ storage } = {}) {
     'callWaiter',
     'attendCall',
     'markRoundReady',
+    'markRoundStarted',
+    'markDining',
   ]);
   return Object.fromEntries(
     Object.entries(api).map(([name, action]) => [

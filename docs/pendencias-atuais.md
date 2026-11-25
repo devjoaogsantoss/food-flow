@@ -11,8 +11,11 @@ Fonte única do trabalho restante. Atualizado em 25/11/2026. Planejamentos e rel
 - Resumo exibe consumo, crédito e diferença; consumo positivo abaixo do crédito exige atendimento presencial e não liquida automaticamente.
 - Fechamento digital/presencial e integração com saída/limpeza implementados por Codex a pedido de João, no escopo originalmente atribuído a Israel. Lock e chaves React duplicadas corrigidos; formulário removido após quitação, saldo zerado e orientação para procurar a recepção. Validação final: 68 testes, build e roteiro Chrome aprovados, incluindo pagamento → saída → limpeza → mesa pronta.
 - Preparação de produção: Docker/Compose, proxy Caddy com HTTPS automático, volume SQLite, healthcheck, reinício automático, bootstrap idempotente de contas e variáveis documentadas em [deploy](deploy.md). Processo Node validado localmente; containers e HTTPS real aguardam servidor de destino.
+- Produto repaginado em duas experiências: cliente com telas próprias de reserva, visita, pedido, acompanhamento e conta; administração por recepção, salão e cozinha. Recepção define mesa e salão confirma acomodação; preparo/refeição têm confirmação explícita. Manual visual aplicado. Veja [experiências do produto](experiencias-produto.md). Verificação atual: 75 testes, build e roteiro HTTP/Chrome aprovados em 390/1024/1440 px.
 
 ## Trabalho restante
+
+Lista de espera segue desativada; bar tem 20 lugares persistentes. Cliente acessa por código sem criar conta ou opcionalmente cria conta para histórico; os dados pessoais exigem revisão de privacidade/retenção antes de produção. Logo vetorial provisória do Santo Garfo criada; trocar pela arte oficial quando disponível.
 
 | Item | Responsável previsto | Situação |
 |---|---|---|
@@ -21,6 +24,7 @@ Fonte única do trabalho restante. Atualizado em 25/11/2026. Planejamentos e rel
 | Ensaio completo, evidências e retestes da equipe | Dudu + equipe | Não executado nesta tarefa |
 | Revisão humana e verificação da CI remota | João + equipe | Não presumidas por testes locais |
 | Escolher/provisionar VM gratuita, configurar endereço público e validar Docker/volume/HTTPS reais | João + Vinicius | Configuração preparada, sem publicação. Docker/Caddy ausentes neste computador; acesso à nuvem ainda não definido |
+| Fornecer logo oficial Santo Garfo para substituir apresentação em texto | João + equipe | Arquivo ausente nos assets; marca não foi recriada |
 | Backup externo e teste de restauração no servidor publicado | João + Vinicius | Pendente; volume persistente não substitui backup |
 
 ## Limites

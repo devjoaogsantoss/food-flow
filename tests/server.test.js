@@ -10,7 +10,7 @@ import { hashPassword } from '../server/auth.js';
 import { readState, writeState, STATE_KEY } from '../src/services/localStore.js';
 const PASSWORD = 'Test-only-password-2026';
 const NOW = () => new Date('2026-11-24T10:00:00-03:00');
-function payload(overrides = {}) { return { date: '2026-11-25', service: '17:45', tableCategory: 2, partySize: 2, guestName: 'Cliente teste', whatsapp: '81999998888', email: 'teste@example.test', paymentStatus: 'aprovado', password: PASSWORD, ...overrides }; }
+function payload(overrides = {}) { return { date: '2026-11-25', service: '17:45', tableCategory: 2, partySize: 2, guestName: 'Cliente teste', whatsapp: '81999998888', email: 'teste@example.test', paymentStatus: 'aprovado', ...overrides }; }
 async function connect(base, method, path, body, token, key) {
  const response = await fetch(base + '/api' + path, { method, signal: AbortSignal.timeout(10_000), headers: { ...(body ? {'Content-Type':'application/json'} : {}), ...(token ? {Authorization:'Bearer '+token} : {}), ...(key ? {'Idempotency-Key':key} : {}) }, ...(body ? {body:JSON.stringify(body)} : {}) });
  return { status: response.status, data: await response.json() };
@@ -37,7 +37,9 @@ test('API integra dispositivos, aplica perfis, preserva preços e persiste após
  assert.equal((await api('POST',`/reservations/${id}/check-in`,{parkingRequired:false},waiter)).status,403);
  assert.equal((await api('POST',`/reservations/${id}/check-in`,{},rec)).status,400);
  assert.equal((await api('POST',`/reservations/${id}/check-in`,{parkingRequired:false},rec)).status,200);
- const seats=await Promise.all([api('POST',`/reservations/${id}/accommodation`,{tableId:1},rec),api('POST',`/reservations/${id}/accommodation`,{tableId:1},rec)]);
+ assert.equal((await api('POST',`/reservations/${id}/table`,{tableId:1},rec)).status,200);
+ assert.equal((await api('POST',`/reservations/${id}/accommodation`,{tableId:1},rec)).status,403);
+ const seats=await Promise.all([api('POST',`/floor/accommodations/${id}`,{},waiter),api('POST',`/floor/accommodations/${id}`,{},waiter)]);
  assert.equal(seats[0].data.command.id,seats[1].data.command.id);
  const command=seats[0].data.command;
  const order={commandId:command.id,items:[{productId:'PRI001',quantity:1,priceCents:1}],source:'garcom'};
@@ -60,8 +62,8 @@ test('API isola reservas e comandas e revoga sessões',async t=>{
  const b=(await api('POST','/reservations',payload({guestName:'Outra pessoa'}))).data;
  assert.equal((await api('GET',`/reservations/${b.id}`,null,a.session.token)).status,403);
  assert.equal((await api('GET',`/reservations/${a.id}`)).status,401);
- assert.equal((await api('POST','/auth/guest',{code:a.id,password:'wrong'})).status,401);
- const login=await api('POST','/auth/guest',{code:a.id,password:PASSWORD});assert.equal(login.status,200);
+ assert.equal((await api('POST','/auth/guest',{code:'FF-0001'})).status,401);
+ const login=await api('POST','/auth/guest',{code:a.id});assert.equal(login.status,200);
  assert.equal((await api('GET',`/reservations/${a.id}`,null,login.data.token)).status,200);
  assert.deepEqual((await api('GET','/checks',null,a.session.token)).data,[]);
  assert.equal((await api('POST','/auth/logout',{},login.data.token)).status,200);
@@ -84,11 +86,60 @@ test('última vaga entre dois processos, cancelamento e idempotência de reserva
  assert.equal((await api('POST',`/reservations/${first.data.id}/cancel`,{},first.data.session.token)).status,200);
  assert.equal((await api('POST','/reservations',payload({tableCategory:8}))).status,200);
 });
+test('bar persiste lugares individuais, preserva alterações concorrentes e limita acesso da recepção', async t => {
+ const f=await fixture(t), {api}=f;
+ const rec=await f.staff('15152018'), waiter=await f.staff('01510041');
+ assert.equal((await api('PUT','/reception/bar/7',{occupied:true},waiter)).status,403);
+ assert.equal((await api('PUT','/reception/bar/21',{occupied:true},rec)).status,400);
+ assert.equal((await api('PUT','/reception/bar/7',{occupied:'true'},rec)).status,400);
+ await Promise.all([api('PUT','/reception/bar/7',{occupied:true},rec), api('PUT','/reception/bar/20',{occupied:true},rec)]);
+ assert.equal((await api('PUT','/reception/bar/7',{occupied:true},rec)).data.changed,false);
+ await f.restart();
+ const operations=(await api('GET','/reception/operations',null,rec)).data;
+ assert.deepEqual(operations.barSeats,[7,20]); assert.equal(operations.barOccupancy,2);
+ await api('PUT','/reception/bar/7',{occupied:false},rec);
+ assert.deepEqual((await api('GET','/reception/operations',null,rec)).data.barSeats,[20]);
+ assert.equal((await api('GET','/reception/progress',null,waiter)).status,403);
+ assert.equal((await api('POST','/waitlist',payload())).status,422);
+});
+
+test('definição de mesa, acomodação pelo salão e andamento preservam responsabilidades entre perfis', async t => {
+ const f=await fixture(t), {api}=f;
+ const rec=await f.staff('15152018'), waiter=await f.staff('01510041'), kitchen=await f.staff('00589510');
+ const a=(await api('POST','/reservations',payload())).data;
+ const b=(await api('POST','/reservations',payload({guestName:'Segundo grupo'}))).data;
+ assert.equal((await api('POST',`/floor/accommodations/${a.id}`,{},waiter)).status,422);
+ for(const r of [a,b]) await api('POST',`/reservations/${r.id}/check-in`,{parkingRequired:false},rec);
+ const assignments=await Promise.all([api('POST',`/reservations/${a.id}/table`,{tableId:1},rec),api('POST',`/reservations/${b.id}/table`,{tableId:1},rec)]);
+ assert.deepEqual(assignments.map(result=>result.status).sort(),[200,409]);
+ assert.equal((await api('GET','/checks',null,a.session.token)).data.length,0,'definir mesa não abre comanda');
+ assert.equal((await api('GET',`/reservations/${a.id}/status`,null,a.session.token)).data.canOrder,false);
+ await f.restart();
+ assert.equal((await api('GET','/floor',null,waiter)).data.arrivals[0].assignedTableId,1,'atribuição persiste');
+ assert.equal((await api('POST',`/floor/accommodations/${a.id}`,{},rec)).status,403);
+ const seat=(await api('POST',`/floor/accommodations/${a.id}`,{},waiter)).data;
+ const commandId=seat.command.id;
+ const round=(await api('POST','/orders',{commandId,items:[{productId:'PRI001',quantity:1}]},a.session.token)).data;
+ assert.equal((await api('PATCH',`/rounds/${round.id}`,{commandId,status:'entregue'},waiter)).status,422);
+ assert.equal((await api('POST',`/checks/${commandId}/dining`,{},waiter)).status,422,'não presume refeição antes da entrega');
+ assert.equal((await api('PATCH',`/rounds/${round.id}`,{commandId,status:'em_preparo'},waiter)).status,403);
+ assert.equal((await api('PATCH',`/rounds/${round.id}`,{commandId,status:'em_preparo'},kitchen)).status,200);
+ assert.ok((await api('GET',`/checks/${commandId}`,null,a.session.token)).data.rounds[0].startedAt);
+ await api('PATCH',`/rounds/${round.id}`,{commandId,status:'pronto'},kitchen);
+ await api('PATCH',`/rounds/${round.id}`,{commandId,status:'entregue'},waiter);
+ assert.equal((await api('POST',`/checks/${commandId}/dining`,{},waiter)).status,200);
+ assert.ok((await api('GET','/reception/progress',null,rec)).data[0].diningAt);
+ await api('POST','/orders',{commandId,items:[{productId:'BEB001',quantity:1}]},a.session.token);
+ assert.equal((await api('GET',`/checks/${commandId}`,null,a.session.token)).data.diningAt,undefined,'nova rodada volta ao atendimento');
+});
+
 test('restrições SQLite revertem snapshot e impedem liquidação e crédito duplicados',async t=>{
  const f=await fixture(t),{api}=f;
  const rec=await f.staff('15152018');const r=(await api('POST','/reservations',payload())).data;
  await api('POST',`/reservations/${r.id}/check-in`,{parkingRequired:false},rec);
- const c=(await api('POST',`/reservations/${r.id}/accommodation`,{tableId:1},rec)).data.command;
+ await api('POST',`/reservations/${r.id}/table`,{tableId:1},rec);
+ const waiter=await f.staff('01510041');
+ const c=(await api('POST',`/floor/accommodations/${r.id}`,{},waiter)).data.command;
  const before=f.instance.storage.getItem(STATE_KEY);
  await assert.rejects(()=>f.instance.transaction(()=>{const state=readState(f.instance.storage);state.orders.commands.push({...state.orders.commands[0],id:999});writeState(state,f.instance.storage);}));
  assert.equal(f.instance.storage.getItem(STATE_KEY),before);
